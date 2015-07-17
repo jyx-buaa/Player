@@ -1,0 +1,72 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "23.0.0 rc2"
+
+    defaultConfig {
+        applicationId "com.nined.player"
+        minSdkVersion 15
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    /**
+     * Android Support Libraries
+     */
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:support-v4:22.2.0'
+    /**
+     * ButterKnife
+     */
+    compile 'com.jakewharton:butterknife:7.0.1'
+    /**
+     * Glide: [Image Downloader by GitHub]
+     */
+    compile 'com.github.bumptech.glide:glide:3.6.1'
+    /**
+     * Json Support
+     */
+    compile 'com.google.code.gson:gson:2.3'
+    compile 'com.google.guava:guava:17.0'
+    /**
+     * Square: Retrofit [
+     */
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    /**
+     * Jsoup: [Html Parser]
+     */
+    compile 'org.jsoup:jsoup:1.8.2'
+    /**
+     * Commons IO
+     */
+    compile 'commons-io:commons-io:2.4'
+    /**
+     * ListView animations
+     */
+    compile 'com.nhaarman.listviewanimations:lib-core:3.1.0'
+    compile 'com.nhaarman.listviewanimations:lib-manipulation:3.1.0'
+    //compile group:'com.nhaarman.listviewanimations', name:'lib-core-slh',       version:'3.1.0'
+    /**
+     * NineOldAndroids Animation Support
+     */
+    compile 'com.nineoldandroids:library:2.4.0'
+    /**
+     * PayPal Dependency Conflict Resolve
+     */
+    /*compile group:'org.apache.httpcomponents', name:'httpclient-android', version:'4.3.5'
+        compile (group:'org.apache.httpcomponents', name:'httpmime', version:'4.3.6') {
+            exclude (group:'org.apache.httpcomponents', module:'httpclient')
+        }*/
+    compile project(':libvlc')
+}

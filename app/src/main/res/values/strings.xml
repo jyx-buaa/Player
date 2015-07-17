@@ -1,0 +1,24 @@
+<resources>
+    <!-- App's General String Usage -->
+    <string name="app_name">SRS 5.1 Media Player</string>
+    <string name="prompt_singleline_lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
+    <string name="prompt_multiline_lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi cursus sapien sit amet tortor bibendum, non imperdiet justo convallis. Mauris vel magna et risus lacinia facilisis in et ante. In.</string>
+    <!-- Splash Activity -->
+    <string name="prompt_welcome">Welcome to 9D\'s media player</string>
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_login">Log In</string>
+    <string name="prompt_anonymous">Anonymous Visit</string>
+    <!-- Main Activity -->
+    <string name="action_settings">Settings</string>
+    <string name="menuitem_refresh">Refresh</string>
+    <string name="drawer_open">Drawer open</string>
+    <string name="drawer_close">Drawer closed</string>
+    <!-- Media Player -->
+    <string name="prompt_buffering">Buffering</string>
+    <!-- PayPal Activity -->
+    <string name="prompt_paypal">Purchase via PayPal</string>
+    <!-- Alipay Activity -->
+    <string name="prompt_alipay">Purchase via Alipay</string>
+    <string name="prompt_alipay_save">Save Alipay information on this device?</string>
+</resources>

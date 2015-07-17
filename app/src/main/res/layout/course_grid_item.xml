@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+    <com.nined.mooc.viewUtils.SquareImageView
+	    android:id="@+id/course_item_thumbnail"
+	   	android:layout_width="match_parent"
+	   	android:layout_height="match_parent"/>
+	<TextView 
+		android:id="@+id/course_item_title"
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:text="@string/prompt_singleline_lorem"
+    	android:textSize="20sp"
+    	android:textColor="@color/White"
+    	android:minLines="2"
+    	android:maxLines="2"
+    	android:textStyle="italic"
+    	android:gravity="center"
+    	android:layout_gravity="bottom|center"
+	    android:layout_alignParentBottom="true"
+	    android:layout_marginBottom="@dimen/activity_vertical_margin"
+	    android:background="@color/BlackOpaque" />
+
+</FrameLayout>

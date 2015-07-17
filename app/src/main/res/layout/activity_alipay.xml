@@ -1,0 +1,61 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/windowBackground"
+	android:weightSum="3"
+    tools:context="com.alipay.util.PaymentActivity">
+	<!-- Alipay Logo -->
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="horizontal"
+	    android:gravity="center_horizontal"
+	    android:layout_weight="2"
+	    android:weightSum="2" >
+		<ImageView
+	       	android:id="@+id/alipay_logo"
+			android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:layout_gravity="center_horizontal"
+	        android:contentDescription="@string/app_name"
+	        android:src="@drawable/logo_alipay" />
+	</LinearLayout>
+	<!--  The main functionalities -->
+	<FrameLayout
+	    android:id="@+id/content_frame"
+		android:layout_weight="1"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent">
+		<ListView
+		    android:id="@+id/content_listview"
+		    android:layout_gravity="center"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:layout_marginBottom="@dimen/bottom_button_height"
+			android:layout_marginLeft="@dimen/activity_horizontal_margin"
+		    android:layout_marginRight="@dimen/activity_horizontal_margin" />
+		<CheckBox
+		    android:id="@+id/save_info_checkbox"
+		    android:text="@string/prompt_alipay_save"
+		    android:textColor="@color/primaryDark"
+		    android:layout_gravity="left|bottom"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginBottom="@dimen/bottom_button_height"
+		    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+		    android:layout_marginRight="@dimen/activity_horizontal_margin" />
+		<Button
+			android:id="@+id/purchase_button" 
+			android:text="@string/prompt_alipay"
+			android:textSize="@dimen/btn_textSize"
+			android:textColor="@color/White"
+			android:background="@drawable/alipay_button_selector"
+			android:layout_gravity="bottom|center"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/bottom_button_height"/>
+	</FrameLayout>
+</LinearLayout>

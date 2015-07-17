@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:gravity="center"
+	android:background="@drawable/category_list_item_selector"
+	android:paddingLeft="@dimen/activity_horizontal_margin"
+	android:paddingRight="@dimen/activity_horizontal_margin"
+	android:layout_marginLeft="@dimen/activity_horizontal_margin"
+	android:layout_marginRight="@dimen/activity_horizontal_margin"
+	android:paddingStart="@dimen/activity_vertical_margin"
+	android:paddingEnd="@dimen/activity_vertical_margin"
+	android:layout_marginTop="@dimen/activity_vertical_margin"
+	android:layout_marginBottom="@dimen/activity_vertical_margin">
+	<FrameLayout
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content" >
+	    <ImageView
+        	android:src="@drawable/frame"
+        	android:layout_centerInParent="true"
+	    	android:layout_width="120sp"
+	    	android:layout_height="120sp"/> 
+    	<ImageView
+	        android:id="@+id/category_item_thumbnail"
+    	    android:layout_centerInParent="true"
+	    	android:layout_width="120sp"
+	    	android:layout_height="120sp"/> 
+	</FrameLayout>
+	<TextView 
+		android:id="@+id/category_item_title"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:text="@string/prompt_singleline_lorem"
+	    android:textSize="20sp"
+	    android:textColor="@color/Black"
+	    android:textStyle="bold"
+	    android:gravity="center"
+	    android:layout_centerInParent="true"
+	/>
+</RelativeLayout>

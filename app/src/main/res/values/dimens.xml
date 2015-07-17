@@ -1,0 +1,23 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16sp</dimen>
+    <dimen name="activity_vertical_margin">16sp</dimen>
+
+    <!-- Drawer Layout Dimensions -->
+    <dimen name="drawer_width">200sp</dimen>
+    <dimen name="nav_textSize">18sp</dimen>
+
+    <!-- Page Fragment Dimensions -->
+    <dimen name="page_title_textSize">20sp</dimen>
+    <dimen name="page_title_boxSize">45sp</dimen>
+    <!-- Course Fragment Dimensions -->
+    <dimen name="course_title_textSize">18sp</dimen>
+    <dimen name="course_title_boxSize">68sp</dimen>
+    <!-- General Dimensions -->
+    <dimen name="header_textSize">14sp</dimen>
+    <dimen name="btn_textSize">14sp</dimen>
+    <dimen name="content_textSize">14sp</dimen>
+    <dimen name="bottom_button_height">60sp</dimen>
+
+</resources>

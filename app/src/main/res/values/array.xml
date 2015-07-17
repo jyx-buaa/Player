@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="nav_items">
+        <item >MOOC HK</item>
+        <item >All Courses</item>
+        <item >Smart Education</item>
+        <item >Job Seekers</item>
+        <item >Contact Us</item>
+        <item >5.1 Video Demo</item>
+        <item >Live Broadcast</item>
+        <item >Exit </item>
+    </string-array>
+    <string-array name="expand_0">
+        <item >About Us</item>
+        <item >How to attend class</item>
+    </string-array>
+    <string-array name="expand_2">
+        <item >Ecosystem</item>
+        <item >International Education Cloud</item>
+        <item >District Cloud Construction</item>
+        <item >Sky Classroom</item>
+        <item >iClassroom</item>
+    </string-array>
+    <string-array name="expand_3">
+        <item >Hong Kong</item>
+        <item >China</item>
+        <item >England</item>
+    </string-array>
+</resources>
