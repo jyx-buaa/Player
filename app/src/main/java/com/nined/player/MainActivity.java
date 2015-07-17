@@ -136,6 +136,9 @@ public class MainActivity extends AppCompatActivity{
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
         int id = item.getItemId();
         switch(id) {
             case R.id.menuRefresh: {
@@ -281,7 +284,8 @@ public class MainActivity extends AppCompatActivity{
      */
     public ActionBarDrawerToggle setUpDrawerToggle() {
         if (SHOW_LOG) Log.d(TAG, "setUpDrawerToggle");
-        return new ActionBarDrawerToggle(this, drawerLayout, null, R.string.drawer_open, R.string.drawer_close) {
+        return new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
+        //return new ActionBarDrawerToggle(this, drawerLayout, null, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerOpened(View view) {
                 super.onDrawerOpened(view);
