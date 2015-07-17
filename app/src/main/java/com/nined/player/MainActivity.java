@@ -1,7 +1,5 @@
 /**
- *
  * @author Aekasitt Guruvanich, 9D Tech
- *
  */
 package com.nined.player;
 
@@ -33,9 +31,7 @@ import java.util.Stack;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Aekasitt on 7/17/2015.
- */
+
 public class MainActivity extends AppCompatActivity{
     /*********************************/
     /**     Logging Assistant(s)    **/
@@ -92,7 +88,6 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        title = drawerTitle = getSupportActionBar().getTitle().toString();
         /*
          * Set appropriate adapters and properties for each elements of the Activity
          */
@@ -109,20 +104,51 @@ public class MainActivity extends AppCompatActivity{
     	 * If there is no previous savedState, starts at 0 'Main Menu'
     	 */
         if (savedInstanceState == null) {
-            navigations = new Stack<NavUnit>();
+            navigations = new Stack<>();
             navigations.push(new NavUnit(0, 0));
             selectItem(navigations.peek());
         }
         /**
          * Initiate ViewPager
          */
-        helper = new MainPagerHelper(MainActivity.this, pager, new PlaceHolderFragment(getResources().getColor(R.color.primaryDark))); //TODO Add fragments here
+        helper = new MainPagerHelper(MainActivity.this, pager,
+                new PlaceHolderFragment(getResources().getColor(R.color.primaryDark)),
+                new PlaceHolderFragment(getResources().getColor(R.color.Bright_Blue)),
+                new PlaceHolderFragment(getResources().getColor(R.color.Bright_Yellow))); //TODO Add fragments here
         /**
          * Set up Cast Media Router;
          */
         //initMediaRouter();
     }
-
+    /**
+     * Create Menu Options with res/menu/main.xml
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (SHOW_LOG) Log.d(TAG, "onCreateOptionsMenu");
+        getMenuInflater().inflate(R.menu.main, menu);
+        this.optionsMenu = menu;
+        return super.onCreateOptionsMenu( menu );
+    }
+    /**
+     * Handle action bar item clicks here. The action bar will automatically handle clicks on the Home/Up button,
+     * so long as you specify a parent activity in AndroidManifext.xml
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch(id) {
+            case R.id.menuRefresh: {
+                getFragmentManager().popBackStack();
+                if (navigations.size()<1)
+                    navigations.push(new NavUnit(0,0));
+                selectItem(navigations.peek());
+                break;
+            }
+            default:
+        }
+        return super.onOptionsItemSelected(item);
+    }
     /*********************************/
     /**      Other Function(s)      **/
     /*********************************/
@@ -241,8 +267,12 @@ public class MainActivity extends AppCompatActivity{
         if (SHOW_LOG) Log.d(TAG, "setUpActionBar");
         ActionBar actionbar = getSupportActionBar();
         //actionbar.setBackgroundDrawable(new ColorDrawable(R.color.MOOC_Blue));
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeButtonEnabled(true);
+        if (actionbar!=null) {
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setHomeButtonEnabled(true);
+            if (actionbar.getTitle()!=null)
+                title = drawerTitle = actionbar.getTitle().toString();
+        }
         return actionbar;
     }
     /**
@@ -299,7 +329,6 @@ public class MainActivity extends AppCompatActivity{
     }
     /**
      * Clear Fragment Back Stack and NavigationObjs in navigations
-     * @return
      */
     private void clearBackStack() {
         if (SHOW_LOG) Log.d(TAG, "clearBackStack");
@@ -311,7 +340,6 @@ public class MainActivity extends AppCompatActivity{
     }
     /**
      * Close connections to database and Exit application.
-     * @return
      */
     private void exitApplication() {
         if (SHOW_LOG) Log.d(TAG, "exitApplication");
@@ -325,7 +353,7 @@ public class MainActivity extends AppCompatActivity{
     }
     /**
      * Set the refresh icon to spinning ProgressBar when refreshing or loading views
-     * @param refresh
+     * @param refresh if true, change the view of the refresh button to spinning, static otherwise
      */
     public void setRefreshActionButtonState(final boolean refresh)
     {
