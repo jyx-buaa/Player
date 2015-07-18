@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#FF313B3D</color>
+    <color name="primary">#FFB9C0C9</color>
     <color name="primaryDark">#FF232B2D</color>
+    <color name="primaryText">#FFB9C0C9</color>
+    <color name="primaryTextDark">#FF102947</color>
     <color name="textColorPrimary">#FFD4D6D6</color>
     <color name="windowBackground">#FFF9F9F9</color>
     <color name="navigationBarColor">#FF78C988</color>
+    <color name="accent">#FFCC0000</color>
     <!-- Textbox White -->
     <color name="pageTitleText">#FFE2E2E2</color>
     <!-- Opaque Green -->
@@ -18,9 +21,9 @@
     <!-- Light Gray -->
     <color name="drawerBackground">#FF666666</color>
     <!--  -->
+    <color name="Transparent">#00000000</color>
     <color name="Gray">#FF333333</color>
     <color name="Light_Gray">#FF666666</color>
-    <color name="Light_Slate_Gray">#FF778899</color>
     <color name="Bright_Gray">#FFD9D9D9</color>
     <color name="Black">#FF000000</color>
     <color name="White">#FFFFFFFF</color>
@@ -34,8 +37,20 @@
     <color name="Hookers_Green">#FF49796B</color>
     <color name="Light_Green">#FF90EE90</color>
     <color name="Mantis_Green">#FF74C365</color>
-    <color name="Transparent">#00000000</color>
-    <color name="BlackOpaque">#99000000</color>
+
+    <!-- Various Oranges -->
     <color name="Bright_Orange">#FFF37926</color>
+    <color name="Opaque_Orange">#66F37926</color>
+    <!-- Various Yellows -->
     <color name="Bright_Yellow">#FFF4FF4B</color>
+    <color name="Opaque_Yellow">#66F4FF4B</color>
+    <!-- Various Grays -->
+    <color name="Light_Slate_Gray">#FF778899</color>
+    <color name="Transparent_Gray">#33778899</color>
+    <color name="Opaque_Gray">#66778899</color>
+    <color name="Murky_Gray">#99778899</color>
+    <!-- Various Blacks -->
+    <color name="Transparent_Black">#33000000</color>
+    <color name="Opaque_Black">#66000000</color>
+    <color name="Murky_Black">#99000000</color>
 </resources>

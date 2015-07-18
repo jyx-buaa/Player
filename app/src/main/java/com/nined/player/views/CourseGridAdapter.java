@@ -44,7 +44,7 @@ public class CourseGridAdapter extends BaseAdapter implements Insertable<Course>
     /*       	Constant(s)		    **/
 	/*********************************/
 	@LayoutRes
-	private static final int LAYOUT_ID = R.layout.course_grid_item;
+	private static final int LAYOUT_ID = R.layout.listitem_course;
 	@IdRes
 	private static final int ITEM_TITLE = R.id.course_item_title;
 	@IdRes

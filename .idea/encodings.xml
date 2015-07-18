@@ -65,24 +65,25 @@
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-mdpi/temp_thumbnail_1.png" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-mdpi/temp_thumbnail_2.png" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-mdpi/temp_thumbnail_3.png" charset="x-windows-950" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/app_background.jpg" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/logo_alipay.jpg" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/alipay_button_selector.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/arrow_btn_selector.xml" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/arrow_indicator.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/background.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/bottom_edittext_bg.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/category_list_item_checked.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/category_list_item_neutral.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/category_list_item_pressed.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/category_list_item_selector.xml" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/child_selector.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/course_list_item_neutral.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/course_list_item_selector.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/frame.xml" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/group_selector.xml" charset="x-windows-950" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/group_arrow_indicator.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/log_in_button_neutral.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/log_in_button_pressed.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/log_in_button_selector.xml" charset="x-windows-950" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/nav_child_selector.xml" charset="x-windows-950" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/nav_group_selector.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/top_edittext_bg.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/menu/main.xml" charset="x-windows-950" />

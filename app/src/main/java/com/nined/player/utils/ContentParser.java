@@ -86,7 +86,7 @@ public class ContentParser {
 					String temp = docParsed.substring(docParsed.indexOf("[header]")+8, docParsed.indexOf("[/header]"));
 					TextView text = new TextView(context);
 					text.setText(temp);
-					text.setTextSize(context.getResources().getDimension(R.dimen.header_textSize));
+					text.setTextSize(context.getResources().getDimension(R.dimen.header_text_size));
 					content.addView(text);
 					docParsed.substring(temp.length()+17);
 					continue;
@@ -94,7 +94,7 @@ public class ContentParser {
 					String temp = docParsed.substring(docParsed.indexOf("[heading]")+9, docParsed.indexOf("[/heading]"));
 					TextView text = new TextView(context);
 					text.setText(temp);
-					text.setTextSize(context.getResources().getDimension(R.dimen.header_textSize));
+					text.setTextSize(context.getResources().getDimension(R.dimen.header_text_size));
 					content.addView(text);
 					docParsed.substring(temp.length()+19);
 					continue;

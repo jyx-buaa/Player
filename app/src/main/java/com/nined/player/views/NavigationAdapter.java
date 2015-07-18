@@ -3,6 +3,7 @@ package com.nined.player.views;
 import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.nined.player.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
@@ -29,11 +31,11 @@ public class NavigationAdapter extends BaseExpandableListAdapter {
 	/**      	Constant(s)		    **/
 	/*********************************/
 	@LayoutRes
-	private static final int LAYOUT_PARENT = R.layout.drawer_parent;
+	private static final int LAYOUT_PARENT = R.layout.listitem_drawer_parent;
 	@IdRes
 	private static final int ITEM_PARENT_TEXT = R.id.parent_text;
 	@LayoutRes
-	private static final int LAYOUT_CHILD = R.layout.drawer_child;
+	private static final int LAYOUT_CHILD = R.layout.listitem_drawer_child;
 	@IdRes
 	private static final int ITEM_CHILD_TEXT = R.id.child_text;
 	/*********************************/
@@ -46,17 +48,15 @@ public class NavigationAdapter extends BaseExpandableListAdapter {
 	/**      	Constructor(s)	    **/
 	/*********************************/
 	public NavigationAdapter(Context context) {
+		if (SHOW_LOG) Log.d(TAG, "constructor");
 		this.context = context;
-		this.nodes = new SparseArray<Node>();
+		this.nodes = new SparseArray<>();
 		String[] parents = context.getResources().getStringArray(R.array.nav_items);
-		String[] children_0 = context.getResources().getStringArray(R.array.expand_0);
-		String[] children_2 = context.getResources().getStringArray(R.array.expand_2);
-		String[] children_3 = context.getResources().getStringArray(R.array.expand_3);
-		for (int i=0; i<parents.length; i++) {
+		for (int i = 0; i<parents.length; i++) {
 			Node n = new Node(parents[i]);
-			if (i==0) for (int j=0; j<children_0.length; j++) n.children.add(children_0[j]);
-			if (i==2) for (int k=0; k<children_2.length; k++) n.children.add(children_2[k]);
-			if (i==3) for (int l=0; l<children_3.length; l++) n.children.add(children_3[l]);
+			if (i==0) n.children.addAll(Arrays.asList(context.getResources().getStringArray(R.array.expand_0)));
+			if (i==2) n.children.addAll(Arrays.asList(context.getResources().getStringArray(R.array.expand_2)));
+			if (i==3) n.children.addAll(Arrays.asList(context.getResources().getStringArray(R.array.expand_3)));
 			nodes.append(i, n);
 		}
 	}

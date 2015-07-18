@@ -20,19 +20,20 @@
 
 	</FrameLayout>
 
-	<ExpandableListView android:id="@+id/main_nav_drawer"
+	<ExpandableListView
+        android:id="@+id/main_nav_drawer"
 	    android:layout_gravity="start"
-	    android:choiceMode="singleChoice"
 		android:layout_width="@dimen/drawer_width"
 		android:layout_height="match_parent"
-		android:groupIndicator="@drawable/arrow_indicator"
-	    android:background="@color/drawerBackground" />
+	    android:background="@color/drawerBackground"
+        android:choiceMode="singleChoice"
+		android:groupIndicator="@drawable/group_arrow_indicator"/>
 	
-	<ExpandableListView android:id="@+id/second_drawer"
+	<!-- <ExpandableListView android:id="@+id/second_drawer"
 	    android:layout_gravity="end"
 	    android:choiceMode="singleChoice"
 		android:layout_width="@dimen/drawer_width"
 		android:layout_height="match_parent"
-		android:groupIndicator="@drawable/arrow_indicator"
-	    android:background="@color/drawerBackground" />
+		android:groupIndicator="@drawable/group_arrow_indicator"
+	    android:background="@color/drawerBackground" /> -->
 </android.support.v4.widget.DrawerLayout>

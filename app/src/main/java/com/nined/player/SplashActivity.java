@@ -49,8 +49,8 @@ public class SplashActivity extends Activity {
     private static final int SPLASH = R.id.splash;
     @IdRes
     private static final int BLOCK = R.id.splash_entry_block;
-    @IdRes
-    private static final int BACKGROUND = R.id.splash_background;
+    //@IdRes
+    //private static final int BACKGROUND = R.id.splash_background;
     @IdRes
     private static final int USERNAME = R.id.splash_username_entry;
     @IdRes
@@ -71,9 +71,9 @@ public class SplashActivity extends Activity {
     /*********************************/
     @Bind(SPLASH) protected ImageView splash;
     @Bind(BLOCK) protected LinearLayout block;
-    @Bind(BACKGROUND) protected LinearLayout bg;
-    @Bind(USERNAME) protected EditText user;
-    @Bind(PASSWORD) protected EditText pwd;
+    //@Bind(BACKGROUND) protected LinearLayout background;
+    @Bind(USERNAME) protected EditText username;
+    @Bind(PASSWORD) protected EditText password;
     @Bind(LOGIN) protected Button login;
 
     /*********************************/
@@ -116,11 +116,10 @@ public class SplashActivity extends Activity {
      * then Launch MainActivity via Intent
      */
     @OnClick (LOGIN)
-    @SuppressWarnings("if")
     protected void launchMain() {
         if (SHOW_LOG) Log.d(TAG, "launchMain");
 
-        if (user.getText().length()<1) {
+        if (username.getText().length()<1) {
             //MoocSvc.initAnonymous();
         } else {
             /*MoocSvc.init(

@@ -14,6 +14,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -91,7 +93,6 @@ public class MainActivity extends AppCompatActivity{
         /*
          * Set appropriate adapters and properties for each elements of the Activity
          */
-        navigationAdapter = new NavigationAdapter(this);
         setUpNavPane();
         /*
          *  Initialize ActionBar and Toggle for mDrawerLayout
@@ -112,9 +113,10 @@ public class MainActivity extends AppCompatActivity{
          * Initiate ViewPager
          */
         helper = new MainPagerHelper(MainActivity.this, pager,
-                new PlaceHolderFragment(getResources().getColor(R.color.primaryDark)),
-                new PlaceHolderFragment(getResources().getColor(R.color.Bright_Blue)),
-                new PlaceHolderFragment(getResources().getColor(R.color.Bright_Yellow))); //TODO Add fragments here
+                new PlaceHolderFragment(getResources().getColor(R.color.Opaque_Gray)),
+                new PlaceHolderFragment(getResources().getColor(R.color.Murky_Gray)),
+                new PlaceHolderFragment(getResources().getColor(R.color.Opaque_Black)),
+                new PlaceHolderFragment(getResources().getColor(R.color.Murky_Black))); //TODO Add fragments here
         /**
          * Set up Cast Media Router;
          */
@@ -221,21 +223,29 @@ public class MainActivity extends AppCompatActivity{
     public void setTitle(CharSequence title) {
         if (SHOW_LOG) Log.d(TAG, "setTitle");
         super.setTitle(title);
-        drawerTitle=title.toString();
+        if (!TextUtils.isEmpty(title))
+            drawerTitle=title.toString();
     }
 
     /**
      * Set Up the Navigation Drawer Panel after this Activity is created.
      */
     public void setUpNavPane() {
+        DisplayMetrics metrics = new DisplayMetrics();
+                    getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int width = metrics.widthPixels;
         int myLeft = drawer.getWidth()-40;
         int myRight = drawer.getWidth()-20;
-        drawer.setAdapter(navigationAdapter);
+
         if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            drawer.setIndicatorBounds(myLeft, myRight);
+            drawer.setIndicatorBounds(width - getPixelsFromDips(myLeft), width - getPixelsFromDips(myRight));
         } else {
-            drawer.setIndicatorBoundsRelative(myLeft, myRight);
+            drawer.setIndicatorBoundsRelative(width - getPixelsFromDips(myLeft), width - getPixelsFromDips(myRight));
         }
+        //
+        navigationAdapter = new NavigationAdapter(this);
+        drawer.setAdapter(navigationAdapter);
+        //
         drawer.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v,
@@ -260,7 +270,6 @@ public class MainActivity extends AppCompatActivity{
 
         });
     }
-
 
     /**
      * Set up and customize the ActionBar shown in this application
@@ -295,7 +304,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                actionBar.setTitle(drawerTitle);
+                setTitle(drawerTitle);
                 invalidateOptionsMenu();
             }
         };
@@ -373,6 +382,12 @@ public class MainActivity extends AppCompatActivity{
                     refreshItem.setActionView(null);
             }
         }
+    }
+    public int getPixelsFromDips(int dips) {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (dips * scale + 0.5f);
     }
     /*********************************/
     /**      Private Class(s)       **/

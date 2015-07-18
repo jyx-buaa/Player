@@ -51,7 +51,7 @@
 		<Button
 			android:id="@+id/purchase_button" 
 			android:text="@string/prompt_alipay"
-			android:textSize="@dimen/btn_textSize"
+			android:textSize="@dimen/btn_text_size"
 			android:textColor="@color/White"
 			android:background="@drawable/alipay_button_selector"
 			android:layout_gravity="bottom|center"

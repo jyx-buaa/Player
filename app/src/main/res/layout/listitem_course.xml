@@ -20,6 +20,6 @@
     	android:layout_gravity="bottom|center"
 	    android:layout_alignParentBottom="true"
 	    android:layout_marginBottom="@dimen/activity_vertical_margin"
-	    android:background="@color/BlackOpaque" />
+	    android:background="@color/Opaque_Black" />
 
 </FrameLayout>
