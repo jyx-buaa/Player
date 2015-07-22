@@ -25,12 +25,18 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
 
 public class ContentParser {
-	/**
-	 * Logging Assistants
-	 */
+	/*********************************/
+	/**     Logging Assistant(s)    **/
+	/*********************************/
 	private static final String TAG = ContentParser.class.getSimpleName();
 	private static final boolean SHOW_LOG = false;
+	/*********************************/
+	/**       Member Variable(s)    **/
+	/*********************************/
 	private static Context context;
+	/*********************************/
+	/**       	  Initiate		    **/
+	/*********************************/
 	public static void init (Context context) {
 		ContentParser.context = context;
 	}

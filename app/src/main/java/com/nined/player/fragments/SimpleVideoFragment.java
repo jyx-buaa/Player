@@ -242,7 +242,7 @@ package com.nined.player.fragments;
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		if (SHOW_LOG) Log.d(TAG, "surfaceDestroyed");
 		if (mediaplayer==null) return;
-		progress.release();
+		progress.setReleased(true);
 		mediaplayer.stop();
 		mediaplayer.release();
 		mediaplayer = null;

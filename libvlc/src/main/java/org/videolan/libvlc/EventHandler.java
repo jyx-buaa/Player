@@ -32,7 +32,7 @@ public class EventHandler {
      * Be sure to subscribe to events you need in the JNI too.
      */
 
-    //public static final int MediaMetaChanged                = 0;
+    public static final int MediaMetaChanged                  = 0;
     //public static final int MediaSubItemAdded               = 1;
     //public static final int MediaDurationChanged            = 2;
     public static final int MediaParsedChanged                = 3;
@@ -58,6 +58,10 @@ public class EventHandler {
     //public static final int MediaPlayerSnapshotTaken        = 0x110;
     //public static final int MediaPlayerLengthChanged        = 0x111;
     public static final int MediaPlayerVout                   = 0x112;
+    //public static final int MediaPlayerScrambledChanged     = 0x113;
+    public static final int MediaPlayerESAdded                = 0x114;
+    public static final int MediaPlayerESDeleted              = 0x115;
+    //public static final int MediaPlayerESSelected           = 0x116;
 
     //public static final int MediaListItemAdded              = 0x200;
     //public static final int MediaListWillAddItem            = 0x201;
@@ -88,8 +92,6 @@ public class EventHandler {
     //public static final int VlmMediaInstanceStatusEnd       = 0x609;
     //public static final int VlmMediaInstanceStatusError     = 0x60a;
 
-    public static final int CustomMediaListExpanding          = 0x2000;
-    public static final int CustomMediaListExpandingEnd       = 0x2001;
     public static final int CustomMediaListItemAdded          = 0x2002;
     public static final int CustomMediaListItemDeleted        = 0x2003;
     public static final int CustomMediaListItemMoved          = 0x2004;

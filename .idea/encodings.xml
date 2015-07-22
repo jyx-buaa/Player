@@ -14,7 +14,6 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/fragments/MyWebViewFragment.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/fragments/PlaceHolderFragment.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/fragments/SimpleVideoFragment.java" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/fragments/VideoFragment.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/model/Broadcast.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/model/Course.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/model/Image.java" charset="x-windows-950" />
@@ -24,16 +23,12 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/unsafe/EasyHttpClient.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/utils/CallableTask.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/utils/ContentParser.java" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/utils/CustomImageLoader.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/utils/TaskCallback.java" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/views/CourseAdapter.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/views/CourseGridAdapter.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/views/NavigationAdapter.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/views/PageAdapter.java" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/views/PageFragment.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/views/SquareImageView.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/nined/player/views/VideoProgressBar.java" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/org.videolan.libvlc" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/animator/crt_off.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/animator/fade_out.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/animator/pop_up.xml" charset="x-windows-950" />
@@ -87,45 +82,19 @@
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/top_edittext_bg.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/menu/main.xml" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher.png" charset="x-windows-950" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/menu/player.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher.png" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_navigation_drawer.png" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_navigation_drawer.png" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-ldpi/ic_menu_refresh.png" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-ldpi/ic_navigation_drawer.png" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_navigation_drawer.png" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher.png" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_navigation_drawer.png" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" charset="x-windows-950" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_menu_refresh.png" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_navigation_drawer.png" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/values/array.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/values/colors.xml" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/values/dimens.xml" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/armeabi-v7a/gdb.setup" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/armeabi-v7a/gdbserver" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/armeabi-v7a/libiomx-gingerbread.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/armeabi-v7a/libiomx-hc.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/armeabi-v7a/libiomx-ics.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/armeabi-v7a/libvlcjni.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/armeabi/gdb.setup" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/armeabi/gdbserver" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/armeabi/libiomx-gingerbread.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/armeabi/libiomx-hc.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/armeabi/libiomx-ics.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/armeabi/libvlcjni.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/mips/gdb.setup" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/mips/gdbserver" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/mips/libiomx-gingerbread.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/mips/libiomx-hc.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/mips/libiomx-ics.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/mips/libvlcjni.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/x86/gdb.setup" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/x86/gdbserver" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/x86/libiomx-gingerbread.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/x86/libiomx-hc.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/x86/libiomx-ics.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/libs/x86/libvlcjni.so" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/src/main/java/org/videolan/libvlc/AudioOutput.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/libvlc/src/main/java/org/videolan/libvlc/EventHandler.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/libvlc/src/main/java/org/videolan/libvlc/IVideoPlayer.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/libvlc/src/main/java/org/videolan/libvlc/LibVLC.java" charset="x-windows-950" />
@@ -133,7 +102,9 @@
     <file url="file://$PROJECT_DIR$/libvlc/src/main/java/org/videolan/libvlc/LibVlcUtil.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/libvlc/src/main/java/org/videolan/libvlc/Media.java" charset="x-windows-950" />
     <file url="file://$PROJECT_DIR$/libvlc/src/main/java/org/videolan/libvlc/MediaList.java" charset="x-windows-950" />
-    <file url="file://$PROJECT_DIR$/libvlc/src/main/java/org/videolan/libvlc/TrackInfo.java" charset="x-windows-950" />
+    <file url="file://$PROJECT_DIR$/libvlc/src/main/jniLibs/armeabi-v7a/libvlcjni.so" charset="x-windows-950" />
+    <file url="file://$PROJECT_DIR$/libvlc/src/main/jniLibs/armeabi/libvlcjni.so" charset="x-windows-950" />
+    <file url="file://$PROJECT_DIR$/libvlc/src/main/jniLibs/x86/libvlcjni.so" charset="x-windows-950" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

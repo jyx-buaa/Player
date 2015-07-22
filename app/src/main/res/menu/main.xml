@@ -1,17 +1,14 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.nined.mooc.MainActivity" >
-	<item android:id="@+id/menuRefresh"
-	    android:icon="@mipmap/ic_menu_refresh"
-	    android:title="@string/menuitem_refresh"
+    tools:context="com.nined.player.MainActivity" >
+
+	<item android:id="@+id/action_refresh"
+	    android:icon="@android:drawable/ic_menu_rotate"
+	    android:title="@string/action_refresh"
 	    android:alphabeticShortcut="r"
 	    android:orderInCategory="1"
 	    app:showAsAction="always"
 	/>
-<!-- 	<item android:id="@+id/media_route_menu_item"
-    	android:title="Chromecast"
-    	app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
-    	app:showAsAction="always"
-    />  -->
 </menu>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="primary">#FFB9C0C9</color>
     <color name="primaryDark">#FF232B2D</color>
     <color name="primaryText">#FFB9C0C9</color>
@@ -8,6 +9,15 @@
     <color name="windowBackground">#FFF9F9F9</color>
     <color name="navigationBarColor">#FF78C988</color>
     <color name="accent">#FFCC0000</color>
+    <!-- MyActionBar Style Colors -->
+    <color name="actionBarBackground">#FF232B2D</color>
+    <color name="actionMenuText">#FFB9C0C9</color>
+    <!-- MyActionBarTitle Style Colors -->
+    <color name="actionBarTitle">#FFB9C0C9</color>
+    <!-- MyDrawerToggle Style Colors -->
+    <color name="drawerToggle">#FFCC0000</color>
+
+    <!-- Other Colors-->
     <!-- Textbox White -->
     <color name="pageTitleText">#FFE2E2E2</color>
     <!-- Opaque Green -->

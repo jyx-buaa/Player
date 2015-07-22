@@ -1,0 +1,36 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.nined.player.fragments.BaseVideoPlayerFragment" >
+
+	<item
+        android:id="@+id/action_cast"
+	    android:icon="@mipmap/ic_cast_launch"
+	    android:title="@string/action_cast"
+	    android:alphabeticShortcut="c"
+	    android:orderInCategory="2"
+	    app:showAsAction="always"
+	/>
+    <!--app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"-->
+    <item
+        android:id="@+id/action_play"
+        android:icon="@android:drawable/ic_media_play"
+        android:title="@string/action_play"
+        android:alphabeticShortcut="p"
+        android:orderInCategory="3"
+        app:showAsAction="ifRoom"
+    />
+    <item
+        android:id="@+id/action_pause"
+        android:icon="@android:drawable/ic_media_pause"
+        android:title="@string/action_pause"
+        android:alphabeticShortcut="p"
+        android:orderInCategory="4"
+        app:showAsAction="ifRoom"
+    />
+<!-- 	<item android:id="@+id/media_route_menu_item"
+    	android:title="Chromecast"
+    	app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
+    	app:showAsAction="always"
+    />  -->
+</menu>

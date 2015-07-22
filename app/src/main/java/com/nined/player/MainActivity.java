@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 
+import com.nined.player.fragments.NineDPlayerFragment;
 import com.nined.player.fragments.PlaceHolderFragment;
 import com.nined.player.utils.MainPagerHelper;
 import com.nined.player.utils.NavUnit;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity{
     /**     Logging Assistant(s)    **/
     /*********************************/
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final boolean SHOW_LOG = false;
+    private static final boolean SHOW_LOG = true;
 
     /*********************************/
     /**         Constant(s)         **/
@@ -82,13 +83,14 @@ public class MainActivity extends AppCompatActivity{
     /**     Lifecycle Override(s)   **/
     /*********************************/
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         /*
          *  Initiates Activity and Get values and views required
          */
         if (SHOW_LOG) Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(LAYOUT);
         ButterKnife.bind(this);
         /*
          * Set appropriate adapters and properties for each elements of the Activity
@@ -101,6 +103,12 @@ public class MainActivity extends AppCompatActivity{
         drawerToggle = setUpDrawerToggle();
         drawerToggle.syncState();
         drawerLayout.setDrawerListener(drawerToggle);
+        /**
+         * Initiate ViewPager
+         */
+        helper = new MainPagerHelper(MainActivity.this, pager,
+                new PlaceHolderFragment(getResources().getColor(R.color.Opaque_Black)),
+                new PlaceHolderFragment(getResources().getColor(R.color.Murky_Black))); //TODO Add fragments here
     	/*
     	 * If there is no previous savedState, starts at 0 'Main Menu'
     	 */
@@ -110,40 +118,36 @@ public class MainActivity extends AppCompatActivity{
             selectItem(navigations.peek());
         }
         /**
-         * Initiate ViewPager
-         */
-        helper = new MainPagerHelper(MainActivity.this, pager,
-                new PlaceHolderFragment(getResources().getColor(R.color.Opaque_Gray)),
-                new PlaceHolderFragment(getResources().getColor(R.color.Murky_Gray)),
-                new PlaceHolderFragment(getResources().getColor(R.color.Opaque_Black)),
-                new PlaceHolderFragment(getResources().getColor(R.color.Murky_Black))); //TODO Add fragments here
-        /**
          * Set up Cast Media Router;
          */
         //initMediaRouter();
     }
+
     /**
      * Create Menu Options with res/menu/main.xml
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         if (SHOW_LOG) Log.d(TAG, "onCreateOptionsMenu");
         getMenuInflater().inflate(R.menu.main, menu);
         this.optionsMenu = menu;
         return super.onCreateOptionsMenu( menu );
     }
+
     /**
      * Handle action bar item clicks here. The action bar will automatically handle clicks on the Home/Up button,
      * so long as you specify a parent activity in AndroidManifext.xml
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         int id = item.getItemId();
         switch(id) {
-            case R.id.menuRefresh: {
+            case R.id.action_refresh: {
                 getFragmentManager().popBackStack();
                 if (navigations.size()<1)
                     navigations.push(new NavUnit(0,0));
@@ -154,6 +158,7 @@ public class MainActivity extends AppCompatActivity{
         }
         return super.onOptionsItemSelected(item);
     }
+
     /*********************************/
     /**      Other Function(s)      **/
     /*********************************/
@@ -164,22 +169,25 @@ public class MainActivity extends AppCompatActivity{
         if (SHOW_LOG) Log.d(TAG, "selectItem");
         final int group = navigationUnit.getGroup();
         final int child = navigationUnit.getChild();
+        if (SHOW_LOG) Log.w(TAG, String.format("Group: %d, Child: %d", group, child));
         // Highlights the selected item, set the title and close the drawer.
         drawer.setItemChecked(navigationUnit.getGroup(), true);
         drawerLayout.closeDrawer(drawer);
         switch (group) {
             case 0: // MOOC HK
             {
-/*    		switch (navigationUnit.child) {
-    		case 0: { viewCreator.launchPage((long) 4859); break;} // About Us
-    		case 1: { viewCreator.launchPage((long) 61); break; }	 // How to attend class
-    		default:
-    		}*/
+                helper.clear();
+                helper.add(NineDPlayerFragment.newInstance("Not Taichi", "https://s3-ap-southeast-1.amazonaws.com/ninedcloud/not+Tai+chi.wav"));
+                    //NineDPlayerFragment.newInstance("Pewdiepie", "sample_video.mp4"),
+                    //NineDPlayerFragment.newInstance("Pewdiepie", "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test4_Talkingheadclipped_mp4_480x320.mp4"),
+                if (SHOW_LOG) Log.i(TAG, "added Not Taichi audio");
                 break;
             }
             case 1: // All Courses
             {
-                //viewCreator.makeCourseList();
+                helper.clear();
+                helper.add(NineDPlayerFragment.newInstance("Indian dude", "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test4_Talkingheadclipped_mp4_480x320.mp4"));
+                if (SHOW_LOG) Log.i(TAG, "added Indian Dude video");
                 break;
             }
             case 2: // Smart Education
@@ -373,7 +381,7 @@ public class MainActivity extends AppCompatActivity{
         if (SHOW_LOG) Log.d(TAG, "setRefreshActionButtonState");
         if (this.optionsMenu != null)
         {
-            final MenuItem refreshItem = optionsMenu.findItem(R.id.menuRefresh);
+            final MenuItem refreshItem = optionsMenu.findItem(R.id.action_refresh);
             if (refreshItem !=null)
             {
                 if (refresh)
