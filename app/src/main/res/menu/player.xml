@@ -5,12 +5,13 @@
 
 	<item
         android:id="@+id/action_cast"
-	    android:icon="@mipmap/ic_cast_launch"
+        android:icon="@mipmap/ic_cast_launch"
 	    android:title="@string/action_cast"
 	    android:alphabeticShortcut="c"
 	    android:orderInCategory="2"
 	    app:showAsAction="always"
 	/>
+    <!-- android:icon="@mipmap/ic_cast_launch" -->
     <!--app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"-->
     <item
         android:id="@+id/action_play"

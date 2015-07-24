@@ -5,14 +5,19 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Read Phone State Permissions for both LibVLC and Universal Plug and Play Integration -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- Wifi and Internet Access -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-feature android:name="android.hardware.wifi"
-        android:required="true" >
-    </uses-feature>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="true" />
+    <!-- Extra Wifi Access Permissions for Universal Plug and Play Integration -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
 
     <!-- Define Application -->
     <application
@@ -20,6 +25,13 @@
         android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
         android:theme="@style/AppTheme">
+
+
+        <!-- Meta Data used for Google Play Services -->
+        <!--<meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />-->
+
         <!-- Activities & Services -->
         <!-- Magikarp used "SPLASH!" -->
         <activity
@@ -35,7 +47,25 @@
         <!-- Where the main control is-->
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="sensorPortrait" />
+            android:label="@string/app_name"
+            android:screenOrientation="sensorPortrait"
+            android:launchMode="singleTop"/>
+        <!-- Universal Plug and Play Integration -->
+        <service
+            android:name=".upnp.ProviderService"
+            android:label="@string/upnp_route_provider_service"
+            android:process=":mrp">
+            <intent-filter>
+                <action android:name="android.media.MediaRouteProviderService"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".upnp.RemotePlayService"/>
+        <service
+            android:name=".mediarouter.MediaRouterPlayService"/>
+        <service
+            android:name="org.teleal.cling.android.AndroidUpnpServiceImpl"/>
+
         <!-- PayPal Integration -->
         <service
             android:name="com.paypal.android.sdk.payments.PayPalService"

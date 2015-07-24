@@ -24,4 +24,19 @@
     <!-- Alipay Activity -->
     <string name="prompt_alipay">Purchase via Alipay</string>
     <string name="prompt_alipay_save">Save Alipay information on this device?</string>
+
+    <!-- UPnP -->
+
+    <string name="upnp_route_provider_service">Universal Plug and Play Provider Service</string>
+    <string name="album_art">Album art goes here</string>
+    <string name="route_list_empty">No devices to connect to.</string>
+    <string name="route_play">Play</string>
+    <string name="route_previous">Previous</string>
+    <string name="route_next">Next</string>
+    <string name="route_pause">Pause</string>
+    <string name="route_shuffle">Shuffle</string>
+    <string name="route_repeat">Repeat</string>
+    <string name="playlist_empty">Playlist is currently empty.</string>
+    <string name="exit_renderer">Exit renderer</string>
+    <string name="select_route">Select a route to play on.</string>
 </resources>

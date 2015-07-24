@@ -63,4 +63,9 @@
     <color name="Transparent_Black">#33000000</color>
     <color name="Opaque_Black">#66000000</color>
     <color name="Murky_Black">#99000000</color>
+
+
+    <!-- UPnP -->
+    <color name="currently_playing_background">#FF000000</color>
+    <color name="button_highlight">#FFEE2233</color>
 </resources>

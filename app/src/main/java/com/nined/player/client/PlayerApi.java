@@ -9,8 +9,6 @@ import java.util.Collection;
  */
 public interface PlayerApi {
 
-
-
     public Collection<Image> findImageByParent(long parentId);
 
     String CONFIG_MERCHANT_ID = "";

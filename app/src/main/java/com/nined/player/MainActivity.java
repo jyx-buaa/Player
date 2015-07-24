@@ -25,6 +25,7 @@ import android.widget.FrameLayout;
 
 import com.nined.player.fragments.NineDPlayerFragment;
 import com.nined.player.fragments.PlaceHolderFragment;
+import com.nined.player.fragments.RouteFragment;
 import com.nined.player.utils.MainPagerHelper;
 import com.nined.player.utils.NavUnit;
 import com.nined.player.views.NavigationAdapter;
@@ -178,6 +179,7 @@ public class MainActivity extends AppCompatActivity{
             {
                 helper.clear();
                 helper.add(NineDPlayerFragment.newInstance("Not Taichi", "https://s3-ap-southeast-1.amazonaws.com/ninedcloud/not+Tai+chi.wav"));
+                helper.add(new RouteFragment());
                     //NineDPlayerFragment.newInstance("Pewdiepie", "sample_video.mp4"),
                     //NineDPlayerFragment.newInstance("Pewdiepie", "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test4_Talkingheadclipped_mp4_480x320.mp4"),
                 if (SHOW_LOG) Log.i(TAG, "added Not Taichi audio");
@@ -398,7 +400,13 @@ public class MainActivity extends AppCompatActivity{
         return (int) (dips * scale + 0.5f);
     }
     /*********************************/
-    /**      Private Class(s)       **/
+    /**      Public interface       **/
     /*********************************/
+    /**
+     * Interface which allows listening to "back" button presses.
+     */
+    public interface OnBackPressedListener {
+        boolean onBackPressed();
+    }
 
 }

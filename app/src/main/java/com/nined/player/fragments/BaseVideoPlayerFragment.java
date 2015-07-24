@@ -8,10 +8,12 @@ package com.nined.player.fragments;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Point;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +23,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.media.MediaRouter;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -47,11 +50,11 @@ import com.nined.player.utils.PrefUtils;
 import org.videolan.libvlc.EventHandler;
 import org.videolan.libvlc.IVideoPlayer;
 import org.videolan.libvlc.LibVLC;
-import org.videolan.libvlc.Media;
 import org.videolan.vlc.util.VLCInstance;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+
 
     public abstract class BaseVideoPlayerFragment
         extends Fragment
@@ -93,6 +96,7 @@ import java.lang.ref.WeakReference;
      */
     private static final String ERROR_NO_MEDIA = "No media entered.";
     private static final String ERROR_INSTANTIATION = "LibVLC instantiation error: %s";
+    private static final String ERROR_MEDIA_ROUTER_SDK = "This device does not support Media Router's Casting.";
     /*
      * Fragment Arguments
      */
@@ -113,6 +117,7 @@ import java.lang.ref.WeakReference;
     /*********************************/
     /**           View(s)           **/
     /*********************************/
+    private Menu menu;
     private ProgressDialog pDialog;
     private RelativeLayout root;
     private SurfaceView display;
@@ -125,7 +130,7 @@ import java.lang.ref.WeakReference;
     private GestureDetector gesDetect;
     private Handler handler;
     private LibVLC libVLC;
-    private Media media;
+    //private Media media;
     private String title, location;
     private long resumePosition;
     private static final int currentSize = SURFACE_BEST_FIT;
@@ -141,7 +146,17 @@ import java.lang.ref.WeakReference;
 
     private boolean disabledHardwareAcceleration = false;
     private int previousHardWareAcceleration;
-
+    /*
+     * Audio Manager Members
+     */
+    private AudioManager audioManager;
+    private int audioMax;
+    /*
+     * Media Router Members
+     */
+    private MediaRouter mediaRouter;
+    private MediaRouter.Callback mediaRouterVideoCallback;
+    private MediaRouter.Callback mediaRouterAudioCallback;
     /*********************************/
     /**          Constructor        **/
     /*********************************/
@@ -238,19 +253,30 @@ import java.lang.ref.WeakReference;
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.player, menu); // TODO create a cast button
+        inflater.inflate(R.menu.player, menu);
         menu.findItem(R.id.action_cast).setVisible(true);
+        menu.findItem(R.id.action_play).setVisible(true);
+        menu.findItem(R.id.action_pause).setVisible(false);
+        this.menu = menu;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_cast: {
+                try {
+                    initMediaRouter(getActivity());
+                } catch (Exception e) {
+                    if (SHOW_LOG) Log.e(TAG, e.getMessage());
+                    if (SHOW_TOASTS) Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
             case R.id.action_play: {
-                togglePlayPause();
+                play();
                 break;
             }
             case R.id.action_pause: {
-                togglePlayPause();
+                pause();
                 break;
             }
             case R.id.action_refresh: {
@@ -506,15 +532,29 @@ import java.lang.ref.WeakReference;
             this.loadMedia();
         } else {
             if (libVLC.isPlaying()) {
-                libVLC.pause();
-                display.setKeepScreenOn(false);
-                applyAnimation(pause, ANIM_TOGGLE);
+                pause();
             } else {
-                libVLC.play();
-                display.setKeepScreenOn(true);
-                applyAnimation(play, ANIM_TOGGLE);
+                play();
             }
         }
+    }
+    protected void play() {
+        if (libVLC==null || libVLC.isPlaying()) return;
+        libVLC.play();
+        display.setKeepScreenOn(true);
+        applyAnimation(play, ANIM_TOGGLE);
+        if (this.menu==null) return;
+        menu.findItem(R.id.action_play).setVisible(false);
+        menu.findItem(R.id.action_pause).setVisible(true);
+    }
+    protected void pause() {
+        if (libVLC==null) return;
+        libVLC.pause();
+        display.setKeepScreenOn(false);
+        applyAnimation(pause, ANIM_TOGGLE);
+        if(this.menu==null) return;
+        menu.findItem(R.id.action_play).setVisible(true);
+        menu.findItem(R.id.action_pause).setVisible(false);
     }
 
     protected void seek(int delta) {
@@ -630,6 +670,80 @@ import java.lang.ref.WeakReference;
         if (libVLC!=null) libVLC.stop();
         onHardwareAccelerationError();
     }
+    /*********************************/
+    /**         Audio Manager       **/
+    /*********************************/
+    protected void initAudioManager(@NonNull Context context) {
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        audioMax = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+    }
+
+    protected void castAudio() {
+
+    }
+    protected void removeAudioCast() {
+
+    }
+    /*********************************/
+    /**         Media Router        **/
+    /*********************************/
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    protected void initMediaRouter(@NonNull Context context) throws Exception {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            throw new Exception(BaseVideoPlayerFragment.ERROR_MEDIA_ROUTER_SDK);
+        }else {
+            mediaRouter = (MediaRouter) context.getSystemService(Context.MEDIA_ROUTER_SERVICE);
+            //MediaInfo mediaInfo = new MediaInfo.Builder(
+            //        this.location).setContentType("video/mp4").setStreamType(MediaInfo.STREAM_TYPE_BUFFERED).build();
+
+            mediaRouterVideoCallback = new MediaRouter.Callback() {
+                @Override
+                public void onRoutePresentationDisplayChanged(MediaRouter router, MediaRouter.RouteInfo info) {
+                    super.onRoutePresentationDisplayChanged(router, info);
+                    removePresentation();
+                }
+            };
+            mediaRouterAudioCallback = new MediaRouter.Callback() {
+                @Override
+                public void onRoutePresentationDisplayChanged(MediaRouter router, MediaRouter.RouteInfo info) {
+                    super.onRoutePresentationDisplayChanged(router, info);
+                    removeAudioCast();
+                }
+
+            };
+        }
+        if (SHOW_LOG) Log.d(TAG, String.format("Media Router Information: %s", mediaRouter.toString()));
+    }
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    /**
+     * Set the Media Router Callback Streams
+     * @param videoEnabled, true if video stream is to be casted, false otherwise;
+     * @param audioEnabled, true if audio stream is to be casted, false otherwise;
+     */
+    protected void mediaRouterSetCallback(boolean videoEnabled, boolean audioEnabled) {
+        /*if (mediaRouter==null) return;
+        // Video
+        if (videoEnabled && mediaRouterVideoCallback!=null) {
+            mediaRouter.addCallback(MediaRouter.ROUTE_TYPE_LIVE_VIDEO, mediaRouterVideoCallback);
+        } else if (!videoEnabled && mediaRouterVideoCallback!=null) {
+            mediaRouter.removeCallback(mediaRouterVideoCallback);
+        }
+        // Audio
+        if (audioEnabled && mediaRouterAudioCallback!=null) {
+            mediaRouter.addCallback(MediaRouter., mediaRouterAudioCallback);
+        } else if (!audioEnabled && mediaRouterAudioCallback!=null){
+            mediaRouter.removeCallback(mediaRouterAudioCallback);
+        }*/
+    }
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    protected void startPresentation(){
+        //TODO
+    }
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    protected void removePresentation() {
+        //TODO
+    }
+
     /*********************************/
     /**     Getters - Setters       **/
     /*********************************/

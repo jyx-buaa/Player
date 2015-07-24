@@ -26,6 +26,7 @@ dependencies {
      */
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:support-v4:22.2.0'
+    compile 'com.android.support:mediarouter-v7:22.2.0'
     /**
      * ButterKnife
      */
@@ -38,7 +39,7 @@ dependencies {
      * Json Support
      */
     compile 'com.google.code.gson:gson:2.3'
-    compile 'com.google.guava:guava:17.0'
+    compile 'com.google.guava:guava:18.0'
     /**
      * Square: Retrofit [
      */
@@ -61,6 +62,11 @@ dependencies {
      * NineOldAndroids Animation Support
      */
     compile 'com.nineoldandroids:library:2.4.0'
+    /**
+     * Cling: Universal Plug and Play Support
+     */
+    //compile 'org.teleal.cling:cling-core:1.0.5'
+    //compile 'org.teleal.cling:cling-support:1.0.5'
     /**
      * PayPal Dependency Conflict Resolve
      */
