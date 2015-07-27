@@ -20,6 +20,9 @@ import org.fourthline.cling.support.model.item.VideoItem;
 import java.net.URI;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * ArrayAdapter specialization for UPnP server directory contents.
  *
@@ -27,9 +30,15 @@ import java.util.List;
  * on 7/24/2015.
  */
 public class FileArrayAdapter extends ArrayAdapter<DIDLObject> {
+    private static final int LISTITEM = R.layout.listitem_route;
+    private static final int ITEM_TITLE = R.id.title;
+    private static final int ITEM_SUBTITLE = R.id.subtitle;
+    private static final int ITEM_IMAGE = R.id.image;
 
+    private Context context;
     public FileArrayAdapter(Context context) {
         super(context, R.layout.listitem_route);
+        this.context =context;
     }
 
     /**
@@ -37,33 +46,34 @@ public class FileArrayAdapter extends ArrayAdapter<DIDLObject> {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) getContext()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.listitem_route, parent, false);
+        ViewHolder holder;
+        if (convertView != null) holder = (ViewHolder) convertView.getTag();
+        else {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(LISTITEM, parent, false);
+            holder = new ViewHolder(convertView);
         }
+        convertView.setTag(holder);
+
         DIDLObject item = getItem(position);
-        TextView title = (TextView) convertView.findViewById(R.id.title);
-        TextView artist = (TextView) convertView.findViewById(R.id.subtitle);
-        artist.setText("");
+        holder.artist.setText("");
         if (item instanceof MusicTrack) {
             MusicTrack track = (MusicTrack) item;
             String trackNumber = (track.getOriginalTrackNumber() != null)
                     ? Integer.toString(track.getOriginalTrackNumber()) + ". "
                     : "";
-            title.setText(trackNumber + item.getTitle());
+            holder.title.setText(trackNumber + item.getTitle());
             if (track.getArtists().length > 0) {
-                artist.setText(track.getArtists()[0].getName());
+                holder.artist.setText(track.getArtists()[0].getName());
             }
         }
         else {
-            title.setText(item.getTitle());
+            holder.title.setText(item.getTitle());
         }
 
-        RemoteImageView image = (RemoteImageView) convertView.findViewById(R.id.image);
         URI icon = item.getFirstPropertyValue(DIDLObject.Property.UPNP.ALBUM_ART_URI.class);
         if (icon != null) {
-            image.setImageUri(icon);
+            holder.image.setImageUri(icon);
         }
         else {
             int resId;
@@ -82,9 +92,8 @@ public class FileArrayAdapter extends ArrayAdapter<DIDLObject> {
             else {
                 resId = R.drawable.ic_root_folder_am;
             }
-            image.setImageResource(resId);
+            holder.image.setImageResource(resId);
         }
-
         return convertView;
     }
 
@@ -96,5 +105,12 @@ public class FileArrayAdapter extends ArrayAdapter<DIDLObject> {
             add(d);
         }
     }
-
+    static class ViewHolder {
+        @Bind(ITEM_TITLE) TextView title;
+        @Bind(ITEM_SUBTITLE) TextView artist;
+        @Bind(ITEM_IMAGE) RemoteImageView image;
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+    }
 }
