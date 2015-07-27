@@ -1,6 +1,7 @@
 <resources>
     <!-- App's General String Usage -->
     <string name="app_name">SRS 5.1 Media Player</string>
+    <string name="prompt_lorem">Lorem Ipsum</string>
     <string name="prompt_singleline_lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
     <string name="prompt_multiline_lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi cursus sapien sit amet tortor bibendum, non imperdiet justo convallis. Mauris vel magna et risus lacinia facilisis in et ante. In.</string>
     <!-- Splash Activity -->

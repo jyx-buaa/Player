@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:background="@color/TextBoxWhite">
 
     <com.nined.player.views.RemoteImageView
         android:id="@+id/image"
@@ -22,6 +23,8 @@
 
         <TextView
             android:id="@+id/title"
+            android:text="@string/prompt_singleline_lorem"
+            android:textColor="@color/Dodger_Blue"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -30,12 +33,12 @@
 
         <TextView
             android:id="@+id/subtitle"
+            android:text="@string/prompt_singleline_lorem"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:lines="1"
+            android:lines="2"
             android:ellipsize="end" />
 
     </LinearLayout>
-
 </LinearLayout>

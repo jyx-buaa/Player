@@ -34,6 +34,13 @@ public class PrefUtils {
         editor.apply();
     }
 
+    public static void save(Context context, String key, boolean value) {
+        if (prefs==null) buildPrefs(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
     public static String getString(Context context, String key, String defaultValue) {
         if (prefs==null) buildPrefs(context);
         return (prefs.contains(key))? prefs.getString(key, defaultValue) : defaultValue;
@@ -47,5 +54,10 @@ public class PrefUtils {
     public static long getLong(Context context, String key, long defaultValue) {
         if (prefs==null) buildPrefs(context);
         return (prefs.contains(key))? prefs.getLong(key, defaultValue) : defaultValue;
+    }
+
+    public static boolean getBoolean(Context context, String key, boolean defaultValue) {
+        if (prefs==null) buildPrefs(context);
+        return (prefs.contains(key)) ? prefs.getBoolean(key, defaultValue) : defaultValue;
     }
 }

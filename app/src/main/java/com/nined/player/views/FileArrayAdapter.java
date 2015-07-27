@@ -9,19 +9,19 @@ import android.widget.TextView;
 
 import com.nined.player.R;
 
-import org.teleal.cling.support.model.DIDLObject;
-import org.teleal.cling.support.model.item.AudioItem;
-import org.teleal.cling.support.model.item.ImageItem;
-import org.teleal.cling.support.model.item.Item;
-import org.teleal.cling.support.model.item.MusicTrack;
-import org.teleal.cling.support.model.item.PlaylistItem;
-import org.teleal.cling.support.model.item.VideoItem;
+import org.fourthline.cling.support.model.DIDLObject;
+import org.fourthline.cling.support.model.item.AudioItem;
+import org.fourthline.cling.support.model.item.ImageItem;
+import org.fourthline.cling.support.model.item.Item;
+import org.fourthline.cling.support.model.item.MusicTrack;
+import org.fourthline.cling.support.model.item.PlaylistItem;
+import org.fourthline.cling.support.model.item.VideoItem;
 
 import java.net.URI;
 import java.util.List;
 
 /**
- * ArrayAdapter specialization for UPNP server directory contents.
+ * ArrayAdapter specialization for UPnP server directory contents.
  *
  * @author Aekasitt Guruvanich, 9D Technologies
  * on 7/24/2015.

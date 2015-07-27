@@ -16,19 +16,19 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
-import org.teleal.cling.android.AndroidUpnpService;
-import org.teleal.cling.android.AndroidUpnpServiceImpl;
-import org.teleal.cling.model.action.ActionInvocation;
-import org.teleal.cling.model.message.UpnpResponse;
-import org.teleal.cling.model.meta.Device;
-import org.teleal.cling.model.meta.LocalDevice;
-import org.teleal.cling.model.meta.RemoteDevice;
-import org.teleal.cling.model.meta.StateVariableAllowedValueRange;
-import org.teleal.cling.model.types.ServiceType;
-import org.teleal.cling.model.types.UDN;
-import org.teleal.cling.registry.Registry;
-import org.teleal.cling.registry.RegistryListener;
-import org.teleal.cling.support.renderingcontrol.callback.GetVolume;
+import org.fourthline.cling.android.AndroidUpnpService;
+import org.fourthline.cling.android.AndroidUpnpServiceImpl;
+import org.fourthline.cling.model.action.ActionInvocation;
+import org.fourthline.cling.model.message.UpnpResponse;
+import org.fourthline.cling.model.meta.Device;
+import org.fourthline.cling.model.meta.LocalDevice;
+import org.fourthline.cling.model.meta.RemoteDevice;
+import org.fourthline.cling.model.meta.StateVariableAllowedValueRange;
+import org.fourthline.cling.model.types.ServiceType;
+import org.fourthline.cling.model.types.UDN;
+import org.fourthline.cling.registry.Registry;
+import org.fourthline.cling.registry.RegistryListener;
+import org.fourthline.cling.support.renderingcontrol.callback.GetVolume;
 
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -103,7 +103,7 @@ public class RemotePlayService extends Service implements RegistryListener {
     /*********************************/
     private void deviceAdded(final Device<?, ?, ?> device) {
         if (devices.containsValue(device)) return;
-        final org.teleal.cling.model.meta.Service<?, ?> rc = getService(device, SERVICE_RENDERING);
+        final org.fourthline.cling.model.meta.Service<?, ?> rc = getService(device, SERVICE_RENDERING);
         if (rc==null || listener==null) return;
 
         if (device.getType().getType().equals("MediaRenderer") && device instanceof RemoteDevice) {
@@ -188,7 +188,7 @@ public class RemotePlayService extends Service implements RegistryListener {
      * @param name name of service
      * @return service by name
      */
-    public org.teleal.cling.model.meta.Service<?,?> getService(
+    public org.fourthline.cling.model.meta.Service<?,?> getService(
             Device<?,?,?> device, String name) {
         return device.findService(new ServiceType("schemas-upnp-org", name));
     }

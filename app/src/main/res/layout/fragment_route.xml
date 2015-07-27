@@ -7,11 +7,10 @@
     android:orientation="vertical" >
 
     <ListView
-        android:id="@+id/listview"
+        android:id="@id/android:list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/controls"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         tools:listitem="@layout/listitem_route"/>
 
@@ -38,68 +37,81 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_height="?attr/listPreferredItemHeight"
+            android:layout_gravity="center_horizontal"
+            android:weightSum="5"
             android:paddingLeft="10dip"
             android:paddingRight="10dip" >
 
-            <TextView
-                android:id="@+id/current_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:gravity="right"
-                android:minEms="2" />
-
             <ImageButton
                 android:id="@+id/shuffle"
+                android:src="@drawable/ic_action_shuffle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/route_shuffle"
-                android:layout_toLeftOf="@+id/previous" />
+                android:layout_weight="1"
+                android:contentDescription="@string/route_shuffle"/>
 
             <ImageButton
                 android:id="@+id/previous"
+                android:src="@drawable/ic_action_previous"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/route_previous"
-                android:layout_toLeftOf="@+id/playpause" />
+                android:layout_weight="1"
+                android:contentDescription="@string/route_previous"/>
 
             <ImageButton
                 android:id="@+id/playpause"
+                android:src="@drawable/ic_action_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/route_play"
-                android:layout_centerHorizontal="true"/>
+                android:layout_weight="1"
+                android:contentDescription="@string/route_play" />
 
             <ImageButton
                 android:id="@+id/next"
+                android:src="@drawable/ic_action_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/route_next"
-                android:layout_toRightOf="@id/playpause" />
+                android:layout_weight="1"
+                android:contentDescription="@string/route_next" />
 
             <ImageButton
                 android:id="@+id/repeat"
+                android:src="@drawable/ic_action_repeat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/route_repeat"
-                android:layout_toRightOf="@id/next" />
+                android:layout_weight="1"
+                android:contentDescription="@string/route_repeat" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/current_time"
+                android:text="@string/prompt_lorem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/route_control_padding"
+                android:gravity="start"/>
 
             <TextView
                 android:id="@+id/total_time"
+                android:text="@string/prompt_lorem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:gravity="right"
-                android:minEms="2"/>
+                android:layout_weight="1"
+                android:padding="@dimen/route_control_padding"
+                android:gravity="end"/>
 
-        </RelativeLayout>
-
+        </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>

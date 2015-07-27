@@ -2,7 +2,6 @@
 
 buildscript {
     repositories {
-        // For Cling library used in UPnP support
         jcenter()
         mavenCentral()
     }

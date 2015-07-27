@@ -178,7 +178,6 @@ public class MainActivity extends AppCompatActivity{
             case 0: // MOOC HK
             {
                 helper.clear();
-                helper.add(NineDPlayerFragment.newInstance("Not Taichi", "https://s3-ap-southeast-1.amazonaws.com/ninedcloud/not+Tai+chi.wav"));
                 helper.add(new RouteFragment());
                     //NineDPlayerFragment.newInstance("Pewdiepie", "sample_video.mp4"),
                     //NineDPlayerFragment.newInstance("Pewdiepie", "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test4_Talkingheadclipped_mp4_480x320.mp4"),

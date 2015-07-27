@@ -17,6 +17,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/beans.xml'
+    }
+}
+
+repositories {
+    mavenCentral()
+    // For Cling library used in UPnP support
+    maven {
+        url 'http://4thline.org/m2'
+    }
 }
 
 dependencies {
@@ -65,8 +76,9 @@ dependencies {
     /**
      * Cling: Universal Plug and Play Support
      */
-    //compile 'org.teleal.cling:cling-core:1.0.5'
-    //compile 'org.teleal.cling:cling-support:1.0.5'
+    compile 'org.fourthline.cling:cling-core:2.0.1'
+    compile 'org.fourthline.cling:cling-support:2.0.1'
+
     /**
      * PayPal Dependency Conflict Resolve
      */

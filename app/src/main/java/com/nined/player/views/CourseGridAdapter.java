@@ -96,10 +96,10 @@ public class CourseGridAdapter extends BaseAdapter implements Insertable<Course>
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
 		ViewHolder holder;
-		LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
 		if (view!=null) {
 			holder = (ViewHolder) view.getTag();
 		} else {
+			LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			view = inflater.inflate(LAYOUT, parent, false);
 			holder = new ViewHolder(view);
 		}
