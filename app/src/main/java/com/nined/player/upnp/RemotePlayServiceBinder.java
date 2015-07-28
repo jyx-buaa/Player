@@ -81,7 +81,7 @@ public class RemotePlayServiceBinder extends IRemotePlayService.Stub {
         }
 
         this.subscriptionCallback = new SubscriptionCallback(currentRenderer.findService(
-                new ServiceType("schemas-upnp-org", "AVTransport")), 600) {
+                new ServiceType(RemotePlayService.UPNP_SCHEMAS, RemotePlayService.SERVICE_AVTRANSPORT)), 600) {
             @SuppressWarnings("rawtypes")
             @Override
             protected void established(GENASubscription genaSubscription) { }

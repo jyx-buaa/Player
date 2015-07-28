@@ -43,7 +43,11 @@ import com.nined.player.mediarouter.MediaRouterPlayService;
 import com.nined.player.mediarouter.MediaRouterPlayServiceBinder;
 import com.nined.player.views.FileArrayAdapter;
 
+import org.fourthline.cling.support.model.PersonWithRole;
+import org.fourthline.cling.support.model.Res;
 import org.fourthline.cling.support.model.item.Item;
+import org.fourthline.cling.support.model.item.MusicTrack;
+import org.seamless.util.MimeType;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -325,6 +329,7 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
             this.mediaRouterPlayService.play(position);
             changePlayPauseState(true);
         }
+        playTaiChi();
     }
 
 
@@ -706,5 +711,22 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
+    }
+
+    protected void playTaiChi() {
+        //DIDLContent didl = new DIDLContent();
+        String album = ("Aeka in the dark");
+        String creator = "9D Technolgoies"; // Required
+        PersonWithRole artist = new PersonWithRole(creator, "Performer");
+        MimeType mimeType = new MimeType("audio", "mpeg");
+
+        List<Item> items = new ArrayList<>();
+        items.add(new MusicTrack(
+                "101", "3", //101 is the Item ID, 3 is the parent Container ID
+                "Not Tai chi",
+                creator, album, artist,
+                new Res(mimeType, (long) 22222221, "00:04:11", (long) 81921, "https://s3-ap-southeast-1.amazonaws.com/ninedcloud/not+Tai+chi.wav")
+        ));
+        play(items,0);
     }
 }

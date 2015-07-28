@@ -13,7 +13,7 @@ public class ProviderService extends MediaRouteProviderService {
     /**     Logging Assistant(s)    **/
     /*********************************/
     private static final String TAG = ProviderService.class.getSimpleName();
-    private static final boolean SHOW_LOG = false;
+    private static final boolean SHOW_LOG = true;
 
     /*********************************/
     /**      Member Variable(s)     **/

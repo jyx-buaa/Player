@@ -49,8 +49,13 @@ public class RemotePlayService extends Service implements RegistryListener {
     /*********************************/
     /**         Constant(s)         **/
     /*********************************/
+    public static final String UPNP_SCHEMAS = "schemas-upnp-org";
     public static final String SERVICE_AVTRANSPORT = "AVTransport";
     public static final String SERVICE_RENDERING = "RenderingControl";
+    public static final String TYPE_MEDIA_RENDERER = "MediaRenderer";
+    public static final String MSG_ID = "id";
+    public static final String MSG_DEVICE = "device";
+    public static final String MSG_ERROR = "error";
 
     /*********************************/
     /**     Member Variable(s)      **/
@@ -106,7 +111,7 @@ public class RemotePlayService extends Service implements RegistryListener {
         final org.fourthline.cling.model.meta.Service<?, ?> rc = getService(device, SERVICE_RENDERING);
         if (rc==null || listener==null) return;
 
-        if (device.getType().getType().equals("MediaRenderer") && device instanceof RemoteDevice) {
+        if (device.getType().getType().equals(RemotePlayService.TYPE_MEDIA_RENDERER) && device instanceof RemoteDevice) {
             this.devices.put(device.getIdentity().getUdn().toString(), device);
             try {
                 upnpService.getControlPoint().execute(new GetVolume(rc) {
@@ -120,6 +125,7 @@ public class RemotePlayService extends Service implements RegistryListener {
                     @Override
                     public void received(ActionInvocation actionInvocation, int i) {
                         int maxVolume = 100;
+                        int currentVolume = 50; //TODO find current Volume
                         if (rc.getStateVariable("Volume") != null) {
                             StateVariableAllowedValueRange volumeRange = rc.getStateVariable("Volume")
                                     .getTypeDetails().getAllowedValueRange();
@@ -128,11 +134,11 @@ public class RemotePlayService extends Service implements RegistryListener {
 
                         Message msg = Message.obtain(null, Provider.MSG_RENDERER_ADDED, 0, 0);
                         String routeName = device.getDetails().getFriendlyName();
-                        msg.getData().putParcelable("device", new Provider.Device(
+                        msg.getData().putParcelable(RemotePlayService.MSG_DEVICE, new Provider.Device(
                                 device.getIdentity().getUdn().toString(),
                                 routeName,
                                 device.getDisplayString(),
-                                50, // TODO currentVolume,
+                                currentVolume,
                                 maxVolume));
                         sendMessage(msg);
                     }
@@ -149,10 +155,10 @@ public class RemotePlayService extends Service implements RegistryListener {
      * @param device to be removed
      */
     private void deviceRemoved(Device<?, ?, ?> device) {
-        if (device.getType().getType().equals("MediaRenderer") && device instanceof RemoteDevice) {
+        if (device.getType().getType().equals(RemotePlayService.TYPE_MEDIA_RENDERER) && device instanceof RemoteDevice) {
             Message msg = Message.obtain(null, Provider.MSG_RENDERER_REMOVED, 0, 0);
             String udn = device.getIdentity().getUdn().toString();
-            msg.getData().putString("id", udn);
+            msg.getData().putString(RemotePlayService.MSG_ID, udn);
             this.devices.remove(udn);
             sendMessage(msg);
         }
@@ -179,7 +185,7 @@ public class RemotePlayService extends Service implements RegistryListener {
     }
     public void sendError(String error) {
         Message msg = Message.obtain(null, Provider.MSG_ERROR, 0, 0);
-        msg.getData().putString("error", error);
+        msg.getData().putString(RemotePlayService.MSG_ERROR, error);
         sendMessage(msg);
     }
     /**
@@ -190,7 +196,7 @@ public class RemotePlayService extends Service implements RegistryListener {
      */
     public org.fourthline.cling.model.meta.Service<?,?> getService(
             Device<?,?,?> device, String name) {
-        return device.findService(new ServiceType("schemas-upnp-org", name));
+        return device.findService(new ServiceType(RemotePlayService.UPNP_SCHEMAS, name));
     }
 
     /*********************************/

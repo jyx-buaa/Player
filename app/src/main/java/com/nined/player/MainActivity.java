@@ -97,6 +97,8 @@ public class MainActivity extends AppCompatActivity{
          * Set appropriate adapters and properties for each elements of the Activity
          */
         setUpNavPane();
+        //TODO Quick fix
+        System.setProperty("org.xml.sax.driver","org.xmlpull.v1.sax2.Driver");
         /*
          *  Initialize ActionBar and Toggle for mDrawerLayout
          */
@@ -407,5 +409,4 @@ public class MainActivity extends AppCompatActivity{
     public interface OnBackPressedListener {
         boolean onBackPressed();
     }
-
 }

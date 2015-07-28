@@ -30,17 +30,36 @@ import butterknife.ButterKnife;
  * on 7/24/2015.
  */
 public class FileArrayAdapter extends ArrayAdapter<DIDLObject> {
+    /*********************************/
+    /**     Logging Assistant(s)    **/
+    /*********************************/
+    private static final String TAG = FileArrayAdapter.class.getSimpleName();
+    private static final boolean SHOW_LOG = true;
+
+    /*********************************/
+    /**         Constant(s)         **/
+    /*********************************/
     private static final int LISTITEM = R.layout.listitem_route;
     private static final int ITEM_TITLE = R.id.title;
     private static final int ITEM_SUBTITLE = R.id.subtitle;
     private static final int ITEM_IMAGE = R.id.image;
 
+    /*********************************/
+    /**       Member Variable(s)    **/
+    /*********************************/
     private Context context;
+
+    /*********************************/
+    /**         Constructor         **/
+    /*********************************/
     public FileArrayAdapter(Context context) {
         super(context, R.layout.listitem_route);
         this.context =context;
     }
 
+    /*********************************/
+    /**   ArrayAdapter Override(s)  **/
+    /*********************************/
     /**
      * Returns a view with folder/media title, and artist name (for audio only).
      */
@@ -105,6 +124,9 @@ public class FileArrayAdapter extends ArrayAdapter<DIDLObject> {
             add(d);
         }
     }
+    /*********************************/
+    /**         View Holder         **/
+    /*********************************/
     static class ViewHolder {
         @Bind(ITEM_TITLE) TextView title;
         @Bind(ITEM_SUBTITLE) TextView artist;
