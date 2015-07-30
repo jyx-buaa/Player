@@ -89,5 +89,6 @@ dependencies {
             exclude (group:'org.apache.httpcomponents', module:'httpclient')
         }*/
     compile project(':libvlc')
+    compile project(':nanohttpd')
 }
 

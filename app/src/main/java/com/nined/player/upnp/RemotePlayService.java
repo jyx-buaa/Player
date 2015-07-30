@@ -16,6 +16,8 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.nined.player.mediaserver.MediaServer;
+
 import org.fourthline.cling.android.AndroidUpnpService;
 import org.fourthline.cling.android.AndroidUpnpServiceImpl;
 import org.fourthline.cling.model.action.ActionInvocation;
@@ -52,6 +54,7 @@ public class RemotePlayService extends Service implements RegistryListener {
     public static final String UPNP_SCHEMAS = "schemas-upnp-org";
     public static final String SERVICE_AVTRANSPORT = "AVTransport";
     public static final String SERVICE_RENDERING = "RenderingControl";
+    public static final String SERVICE_CONTENT_DIRECTORY = "ContentDirectory";
     public static final String TYPE_MEDIA_RENDERER = "MediaRenderer";
     public static final String MSG_ID = "id";
     public static final String MSG_DEVICE = "device";
@@ -64,6 +67,7 @@ public class RemotePlayService extends Service implements RegistryListener {
     protected Map<String, Device<?,?,?>> devices = new ConcurrentHashMap<>();
     protected AndroidUpnpService upnpService;
 
+    private MediaServer localServer;
     private ServiceConnection upnpServiceConnection = createUpnpServiceConnection();
     private BroadcastReceiver wifiReceiver = createWifiReceiver();
     /**
@@ -247,6 +251,9 @@ public class RemotePlayService extends Service implements RegistryListener {
         return new ServiceConnection() {
             public void onServiceConnected(ComponentName className, IBinder service) {
                 upnpService = (AndroidUpnpService) service;
+                /*
+                 * Search for other connected media servers
+                 */
                 upnpService.getRegistry().addListener(RemotePlayService.this);
                 for(Device<?, ?, ?> d: upnpService.getControlPoint().getRegistry().getDevices()) {
                     if (d instanceof LocalDevice) {

@@ -43,11 +43,7 @@ import com.nined.player.mediarouter.MediaRouterPlayService;
 import com.nined.player.mediarouter.MediaRouterPlayServiceBinder;
 import com.nined.player.views.FileArrayAdapter;
 
-import org.fourthline.cling.support.model.PersonWithRole;
-import org.fourthline.cling.support.model.Res;
 import org.fourthline.cling.support.model.item.Item;
-import org.fourthline.cling.support.model.item.MusicTrack;
-import org.seamless.util.MimeType;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -155,11 +151,11 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
      * If true, the item at this position will be played as soon as a route is selected.
      */
     private int startPlayingOnSelect = -1;
-
+    /**
+     * Media Router Service
+     */
     private MediaRouterPlayService mediaRouterPlayService;
-
     private ServiceConnection playServiceConnection = new ServiceConnection() {
-
         public void onServiceConnected(ComponentName className, IBinder service) {
             MediaRouterPlayServiceBinder binder = (MediaRouterPlayServiceBinder) service;
             mediaRouterPlayService = binder.getService();
@@ -329,7 +325,7 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
             this.mediaRouterPlayService.play(position);
             changePlayPauseState(true);
         }
-        playTaiChi();
+//        playTaiChi();
     }
 
 
@@ -616,11 +612,13 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
             // PLAYPAUSE state changed
             this.controlButtons.get(1).setImageResource(R.drawable.ic_action_pause);
             this.controlButtons.get(1).setContentDescription(getResources().getString(R.string.route_pause));
+            getMainActivity().setRefreshActionButtonState(false);
         }
         else {
             // PLAYPAUSE state changed
             this.controlButtons.get(1).setImageResource(R.drawable.ic_action_play);
             this.controlButtons.get(1).setContentDescription(getResources().getString(R.string.route_play));
+            getMainActivity().setRefreshActionButtonState(true);
         }
     }
 
@@ -713,7 +711,7 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
         }
     }
 
-    protected void playTaiChi() {
+/*    protected void playTaiChi() {
         //DIDLContent didl = new DIDLContent();
         String album = ("Aeka in the dark");
         String creator = "9D Technolgoies"; // Required
@@ -728,5 +726,9 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
                 new Res(mimeType, (long) 22222221, "00:04:11", (long) 81921, "https://s3-ap-southeast-1.amazonaws.com/ninedcloud/not+Tai+chi.wav")
         ));
         play(items,0);
+    }*/
+
+    protected MainActivity getMainActivity() {
+        return (MainActivity) getActivity();
     }
 }

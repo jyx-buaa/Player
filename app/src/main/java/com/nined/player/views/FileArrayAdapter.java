@@ -135,4 +135,20 @@ public class FileArrayAdapter extends ArrayAdapter<DIDLObject> {
             ButterKnife.bind(this, view);
         }
     }
+
+ /*   public class LocalServer extends NanoHTTPD {
+        public LocalServer() {
+            super(8089);
+        }
+        public Response serve(String uri, Method method, Map<String, String> header, Map<String, String> parameters, Map<String, String> files) {
+            String answer = "";
+            FileInputStream input = null;
+            try {
+                input = new FileInputStream(Environment.getExternalStorageDirectory() + "/music/musicfile.mp3");
+            }catch (FileNotFoundException e) {
+                if (SHOW_LOG) Log.w(TAG, "File not found", e);
+            }
+            return new NanoHTTPD.Response(Response.Status.OK, "audio/mpeg", input);
+        }
+    }*/
 }

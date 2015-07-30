@@ -16,4 +16,9 @@ public interface PlayerApi {
     String CONFIG_PRIVACY_POLICY_PAGE = "";
     String CONFIG_USER_AGREEMENT_PAGE = "";
     int REQUEST_CODE_PAYMENT = 0;
+
+    String CONTENTDIRECTORY_NAME = PlayerApi.class.getPackage() + ".content.directory.name";
+    String CONTENTDIRECTORY_IMAGE = PlayerApi.class.getPackage() + ".content.directory.image";
+    String CONTENTDIRECTORY_AUDIO = PlayerApi.class.getPackage() + ".content.directory.audio";
+    String CONTENTDIRECTORY_VIDEO = PlayerApi.class.getPackage() + ".content.directory.video";
 }
