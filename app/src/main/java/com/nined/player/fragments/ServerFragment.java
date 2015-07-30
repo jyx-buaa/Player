@@ -86,6 +86,8 @@ public class ServerFragment extends ListFragment
     protected static final String SERVER = "MediaServer";
     private static final String ROOT_DIRECTORY = "0";
     @LayoutRes
+    private static final int LAYOUT = R.layout.fragment_server;
+    @LayoutRes
     private static final int LISTITEM = R.layout.listitem_route;
     @IdRes
     private static final int ITEM_TITLE = R.id.title;
@@ -165,6 +167,12 @@ public class ServerFragment extends ListFragment
             this.listState.push(getListView().onSaveInstanceState());
         }
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(LAYOUT, null);
+    };
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
