@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.os.Message;
@@ -20,6 +21,7 @@ import com.nined.player.mediaserver.MediaServer;
 
 import org.fourthline.cling.android.AndroidUpnpService;
 import org.fourthline.cling.android.AndroidUpnpServiceImpl;
+import org.fourthline.cling.model.ValidationException;
 import org.fourthline.cling.model.action.ActionInvocation;
 import org.fourthline.cling.model.message.UpnpResponse;
 import org.fourthline.cling.model.meta.Device;
@@ -32,6 +34,12 @@ import org.fourthline.cling.registry.Registry;
 import org.fourthline.cling.registry.RegistryListener;
 import org.fourthline.cling.support.renderingcontrol.callback.GetVolume;
 
+import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.UnknownHostException;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -56,8 +64,10 @@ public class RemotePlayService extends Service implements RegistryListener {
     public static final String SERVICE_RENDERING = "RenderingControl";
     public static final String SERVICE_CONTENT_DIRECTORY = "ContentDirectory";
     public static final String TYPE_MEDIA_RENDERER = "MediaRenderer";
+    public static final String MSG_STATUS_INFO = "media_item_status";
     public static final String MSG_ID = "id";
     public static final String MSG_DEVICE = "device";
+    public static final String MSG_HASH = "hash";
     public static final String MSG_ERROR = "error";
 
     /*********************************/
@@ -252,6 +262,31 @@ public class RemotePlayService extends Service implements RegistryListener {
             public void onServiceConnected(ComponentName className, IBinder service) {
                 upnpService = (AndroidUpnpService) service;
                 /*
+                 * Create and add Local Server
+                 */
+                try {
+                    if (localServer==null) {
+                        Context context = getApplicationContext();
+                        localServer = new MediaServer(getLocalIpAddress(context), context);
+                        localServer.start();
+                    } else {
+                        localServer.restart();
+                    }
+                } catch (UnknownHostException uhe) {
+                    if (SHOW_LOG) Log.w(TAG, "Unknown host for Local Server");
+                    if (SHOW_LOG) Log.e(TAG, "Exception: ", uhe);
+                } catch (ValidationException ve) {
+                    if (SHOW_LOG) Log.w(TAG, "Local Server Creation failed");
+                    if (SHOW_LOG) Log.e(TAG, "Exception: ", ve);
+                } catch (IOException e) {
+                    if (SHOW_LOG) Log.w(TAG, "Starting Http server failed");
+                    if (SHOW_LOG) Log.e(TAG, "Exception: ", e);
+                }
+                if (SHOW_LOG) Log.i(TAG, "Created local server");
+                upnpService.getRegistry().addDevice(localServer.getDevice());
+                if (SHOW_LOG) Log.i(TAG, "Added local device to upnpService's device list");
+
+                /*
                  * Search for other connected media servers
                  */
                 upnpService.getRegistry().addListener(RemotePlayService.this);
@@ -270,6 +305,58 @@ public class RemotePlayService extends Service implements RegistryListener {
                 upnpService=null;
             }
         };
+    }
+    /*********************************/
+    /**Registry Listener Override(s)**/
+    /*********************************/
+    private static InetAddress getLocalIpAddress(Context ctx) throws UnknownHostException
+    {
+        WifiManager wifiManager = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        int ipAddress = wifiInfo.getIpAddress();
+        if(ipAddress!=0)
+            return InetAddress.getByName(String.format("%d.%d.%d.%d",
+                    (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
+                    (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff)));
+
+        Log.d(TAG, "No ip adress available throught wifi manager, try to get it manually");
+
+        InetAddress inetAddress;
+
+        inetAddress = getLocalIpAdressFromIntf("wlan0");
+        if(inetAddress!=null)
+        {
+            Log.d(TAG, "Got an ip for interfarce wlan0");
+            return inetAddress;
+        }
+
+        inetAddress = getLocalIpAdressFromIntf("usb0");
+        if(inetAddress!=null)
+        {
+            Log.d(TAG, "Got an ip for interfarce usb0");
+            return inetAddress;
+        }
+
+        return InetAddress.getByName("0.0.0.0");
+    }
+    private static InetAddress getLocalIpAdressFromIntf(String intfName)
+    {
+        try
+        {
+            NetworkInterface intf = NetworkInterface.getByName(intfName);
+            if(intf.isUp())
+            {
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();)
+                {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address)
+                        return inetAddress;
+                }
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Unable to get ip adress for interface " + intfName);
+        }
+        return null;
     }
     /*********************************/
     /**Registry Listener Override(s)**/

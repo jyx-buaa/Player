@@ -157,6 +157,7 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
     private MediaRouterPlayService mediaRouterPlayService;
     private ServiceConnection playServiceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
+            if (SHOW_LOG) Log.d(TAG, "Successfully bound service");
             MediaRouterPlayServiceBinder binder = (MediaRouterPlayServiceBinder) service;
             mediaRouterPlayService = binder.getService();
             mediaRouterPlayService.setRouteFragment(RouteFragment.this);
@@ -169,6 +170,7 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
         }
 
         public void onServiceDisconnected(ComponentName className) {
+            if (SHOW_LOG) Log.d(TAG, "Unsuccessful service binding");
             mediaRouterPlayService = null;
         }
     };

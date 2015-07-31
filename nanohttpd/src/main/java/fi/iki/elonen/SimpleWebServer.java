@@ -228,7 +228,7 @@ public class SimpleWebServer extends NanoHTTPD {
     public SimpleWebServer(String host, int port, File wwwroot, boolean quiet) {
         super(host, port);
         this.quiet = quiet;
-        this.rootDirs = new ArrayList<File>();
+        this.rootDirs = new ArrayList<>();
         this.rootDirs.add(wwwroot);
 
         init();
@@ -237,7 +237,7 @@ public class SimpleWebServer extends NanoHTTPD {
     public SimpleWebServer(String host, int port, List<File> wwwroots, boolean quiet) {
         super(host, port);
         this.quiet = quiet;
-        this.rootDirs = new ArrayList<File>(wwwroots);
+        this.rootDirs = new ArrayList<>(wwwroots);
 
         init();
     }
@@ -265,15 +265,19 @@ public class SimpleWebServer extends NanoHTTPD {
         StringTokenizer st = new StringTokenizer(uri, "/ ", true);
         while (st.hasMoreTokens()) {
             String tok = st.nextToken();
-            if (tok.equals("/")) {
-                newUri += "/";
-            } else if (tok.equals(" ")) {
-                newUri += "%20";
-            } else {
-                try {
-                    newUri += URLEncoder.encode(tok, "UTF-8");
-                } catch (UnsupportedEncodingException ignored) {
-                }
+            switch (tok) {
+                case "/":
+                    newUri += "/";
+                    break;
+                case " ":
+                    newUri += "%20";
+                    break;
+                default:
+                    try {
+                        newUri += URLEncoder.encode(tok, "UTF-8");
+                    } catch (UnsupportedEncodingException ignored) {
+                    }
+                    break;
             }
         }
         return newUri;
@@ -444,7 +448,7 @@ public class SimpleWebServer extends NanoHTTPD {
 
         String mimeTypeForFile = getMimeTypeForFile(uri);
         WebServerPlugin plugin = SimpleWebServer.mimeTypeHandlers.get(mimeTypeForFile);
-        Response response = null;
+        Response response;
         if (plugin != null && plugin.canServeUri(uri, homeDir)) {
             response = plugin.serveFile(uri, headers, session, f, mimeTypeForFile);
             if (response != null && response instanceof InternalRewrite) {
@@ -491,7 +495,7 @@ public class SimpleWebServer extends NanoHTTPD {
      * Serves file from homeDir and its' subdirectories (only). Uses only URI,
      * ignores all headers and HTTP parameters.
      */
-    Response serveFile(String uri, Map<String, String> header, File file, String mime) {
+    protected Response serveFile(String uri, Map<String, String> header, File file, String mime) {
         Response res;
         try {
             // Calculate etag

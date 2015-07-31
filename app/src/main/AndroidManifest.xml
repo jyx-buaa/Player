@@ -64,7 +64,7 @@
         <service
             android:name=".mediarouter.MediaRouterPlayService"/>
         <service
-            android:name="org.teleal.cling.android.AndroidUpnpServiceImpl"/>
+            android:name="org.fourthline.cling.android.AndroidUpnpServiceImpl"/>
 
         <!-- PayPal Integration -->
         <service

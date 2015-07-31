@@ -23,14 +23,15 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 
-import com.nined.player.fragments.NineDPlayerFragment;
-import com.nined.player.fragments.PlaceHolderFragment;
 import com.nined.player.fragments.RouteFragment;
 import com.nined.player.fragments.ServerFragment;
 import com.nined.player.utils.MainPagerHelper;
 import com.nined.player.utils.NavUnit;
 import com.nined.player.views.NavigationAdapter;
 
+import org.fourthline.cling.support.model.item.Item;
+
+import java.util.List;
 import java.util.Stack;
 
 import butterknife.Bind;
@@ -80,6 +81,8 @@ public class MainActivity extends AppCompatActivity{
     private NavigationAdapter navigationAdapter;
     private MainPagerHelper helper;
     private Menu optionsMenu;
+    private ServerFragment serverFragment;
+    private RouteFragment routeFragment;
 
     /*********************************/
     /**     Lifecycle Override(s)   **/
@@ -103,16 +106,16 @@ public class MainActivity extends AppCompatActivity{
         /*
          *  Initialize ActionBar and Toggle for mDrawerLayout
          */
-        actionBar = setUpActionBar();
-        drawerToggle = setUpDrawerToggle();
-        drawerToggle.syncState();
-        drawerLayout.setDrawerListener(drawerToggle);
+        this.actionBar = setUpActionBar();
+        this.drawerToggle = setUpDrawerToggle();
+        this.drawerToggle.syncState();
+        this.drawerLayout.setDrawerListener(drawerToggle);
         /**
          * Initiate ViewPager
          */
-        helper = new MainPagerHelper(MainActivity.this, pager,
-                new PlaceHolderFragment(getResources().getColor(R.color.Opaque_Black)),
-                new PlaceHolderFragment(getResources().getColor(R.color.Murky_Black))); //TODO Add fragments here
+        this.routeFragment = new RouteFragment();
+        this.serverFragment = new ServerFragment();
+        helper = new MainPagerHelper(MainActivity.this, pager, routeFragment, serverFragment);
     	/*
     	 * If there is no previous savedState, starts at 0 'Main Menu'
     	 */
@@ -180,18 +183,18 @@ public class MainActivity extends AppCompatActivity{
         switch (group) {
             case 0: // MOOC HK
             {
-                helper.clear();
+                /*helper.clear();
                 helper.add(new ServerFragment());
-                helper.add(new RouteFragment());
+                helper.add(new RouteFragment());*/
                     //NineDPlayerFragment.newInstance("Pewdiepie", "sample_video.mp4"),
                     //NineDPlayerFragment.newInstance("Pewdiepie", "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test4_Talkingheadclipped_mp4_480x320.mp4"),
                 break;
             }
             case 1: // All Courses
             {
-                helper.clear();
-                helper.add(NineDPlayerFragment.newInstance("Indian dude", "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test4_Talkingheadclipped_mp4_480x320.mp4"));
-                if (SHOW_LOG) Log.i(TAG, "added Indian Dude video");
+                //helper.clear();
+                //helper.add(NineDPlayerFragment.newInstance("Indian dude", "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test4_Talkingheadclipped_mp4_480x320.mp4"));
+                //if (SHOW_LOG) Log.i(TAG, "added Indian Dude video");
                 break;
             }
             case 2: // Smart Education
@@ -227,6 +230,15 @@ public class MainActivity extends AppCompatActivity{
             }
             default:
         }
+    }
+
+    /**
+     * Set the route fragment to start playing from a playlist and position on the playlist
+     * @param playlist to be added to routeFragment's playlist
+     * @param position to play from
+     */
+    public void play(List<Item> playlist, int position) {
+        this.routeFragment.play(playlist, position);
     }
     /**
      * Set the Title in Action Bar to correspond with selected item from the navigation drawer

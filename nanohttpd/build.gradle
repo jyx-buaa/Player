@@ -21,4 +21,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.1'
+    testCompile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.5'
+    testCompile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.2.5'
+
 }

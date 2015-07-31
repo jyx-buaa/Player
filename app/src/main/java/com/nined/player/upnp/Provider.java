@@ -206,17 +206,17 @@ final class Provider extends MediaRouteProvider {
         switch (msg.what) {
             case MSG_RENDERER_ADDED:
                 msg.getData().setClassLoader(Device.class.getClassLoader());
-                Device device = data.getParcelable("device");
+                Device device = data.getParcelable(RemotePlayService.MSG_DEVICE);
                 this.devices.put(device.id, device);
                 updateRoutes();
                 break;
             case MSG_RENDERER_REMOVED:
-                devices.remove(data.getString("id"));
+                devices.remove(data.getString(RemotePlayService.MSG_ID));
                 updateRoutes();
                 break;
             case MSG_STATUS_INFO:
-                Pair<Intent, ControlRequestCallback> pair = this.requests.get(data.getInt("hash"));
-                Bundle status = data.getBundle("media_item_status");
+                Pair<Intent, ControlRequestCallback> pair = this.requests.get(data.getInt(RemotePlayService.MSG_HASH));
+                Bundle status = data.getBundle(RemotePlayService.MSG_STATUS_INFO);
                 if (pair.first.hasExtra(MediaControlIntent.EXTRA_SESSION_ID)) {
                     status.putString(MediaControlIntent.EXTRA_SESSION_ID,
                             pair.first.getStringExtra(MediaControlIntent.EXTRA_SESSION_ID));
@@ -228,8 +228,8 @@ final class Provider extends MediaRouteProvider {
                 pair.second.onResult(status);
                 break;
             case MSG_ERROR:
-                if (SHOW_LOG) Log.e(TAG, data.getString("error"));
-                Toast.makeText(getContext(), data.getString("error"), Toast.LENGTH_SHORT).show();
+                if (SHOW_LOG) Log.e(TAG, data.getString(RemotePlayService.MSG_ERROR));
+                Toast.makeText(getContext(), data.getString(RemotePlayService.MSG_ERROR), Toast.LENGTH_SHORT).show();
                 break;
         }
     }

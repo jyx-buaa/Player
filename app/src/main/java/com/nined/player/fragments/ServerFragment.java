@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -34,7 +33,6 @@ import com.nined.player.views.RemoteImageView;
 
 import org.fourthline.cling.android.AndroidUpnpService;
 import org.fourthline.cling.android.AndroidUpnpServiceImpl;
-import org.fourthline.cling.model.ValidationException;
 import org.fourthline.cling.model.action.ActionInvocation;
 import org.fourthline.cling.model.message.UpnpResponse;
 import org.fourthline.cling.model.meta.Device;
@@ -51,16 +49,10 @@ import org.fourthline.cling.support.model.DIDLContent;
 import org.fourthline.cling.support.model.container.Container;
 import org.fourthline.cling.support.model.item.Item;
 
-import java.io.IOException;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Stack;
 
@@ -147,6 +139,9 @@ public class ServerFragment extends ListFragment
         this.setListAdapter(deviceAdapter);
 
         // launch and bind UPnPService
+        if (SHOW_LOG) Log.d(TAG, "Attempt to bind service to AndroidUpnpServiceImpl");
+        //todo getActivity().getApplicationContext().startService(
+        //TODO        new Intent(getActivity(), AndroidUpnpServiceImpl.class));
         getActivity().getApplicationContext().bindService(
                 new Intent(getActivity(), AndroidUpnpServiceImpl.class),
                 upnpServiceConnection, Context.BIND_AUTO_CREATE
@@ -169,10 +164,10 @@ public class ServerFragment extends ListFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(LAYOUT, null);
-    };
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(LAYOUT, container, false);
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -206,7 +201,7 @@ public class ServerFragment extends ListFragment
                         playlist.add((Item) this.fileAdapter.getItem(i));
                     }
                 }
-                // getMainActivity().play(playlist, position);
+                getMainActivity().play(playlist, position);
             }
         }
     }
@@ -221,32 +216,8 @@ public class ServerFragment extends ListFragment
         return new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                upnpService = (AndroidUpnpService) service;
-                /*
-                 * Create and add Local Server
-                 */
-                try {
-                    if (localServer==null) {
-                        Context context = getActivity().getApplicationContext();
-                        localServer = new MediaServer(getLocalIpAddress(context), context);
-                        localServer.start();
-                    } else {
-                        localServer.restart();
-                    }
-                } catch (UnknownHostException uhe) {
-                    if (SHOW_LOG) Log.w(TAG, "Unknown host for Local Server");
-                    if (SHOW_LOG) Log.e(TAG, "Exception: ", uhe);
-                } catch (ValidationException ve) {
-                    if (SHOW_LOG) Log.w(TAG, "Local Server Creation failed");
-                    if (SHOW_LOG) Log.e(TAG, "Exception: ", ve);
-                } catch (IOException e) {
-                    if (SHOW_LOG) Log.w(TAG, "Starting Http server failed");
-                    if (SHOW_LOG) Log.e(TAG, "Exception: ", e);
-                }
-                if (SHOW_LOG) Log.i(TAG, "Created local server");
-                upnpService.getRegistry().addDevice(localServer.getDevice());
-                if (SHOW_LOG) Log.i(TAG, "Added local device to upnpService's device list");
-
+                if (SHOW_LOG) Log.d(TAG, "Service bound successfully");
+                ServerFragment.this.upnpService = (AndroidUpnpService) service;
                 upnpService.getRegistry().addListener(deviceAdapter);
                 for (Device<?, ?, ?> d : upnpService.getControlPoint().getRegistry().getDevices()) {
                     ServerFragment.this.deviceAdapter.deviceAdded(d);
@@ -265,6 +236,7 @@ public class ServerFragment extends ListFragment
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
+                if (SHOW_LOG) Log.w(TAG, "Unsuccessful service binding");
                 upnpServiceConnection = null;
             }
         };
@@ -374,55 +346,7 @@ public class ServerFragment extends ListFragment
             }
         });
     }
-    private static InetAddress getLocalIpAddress(Context ctx) throws UnknownHostException
-    {
-        WifiManager wifiManager = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        int ipAddress = wifiInfo.getIpAddress();
-        if(ipAddress!=0)
-            return InetAddress.getByName(String.format("%d.%d.%d.%d",
-                    (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
-                    (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff)));
 
-        Log.d(TAG, "No ip adress available throught wifi manager, try to get it manually");
-
-        InetAddress inetAddress;
-
-        inetAddress = getLocalIpAdressFromIntf("wlan0");
-        if(inetAddress!=null)
-        {
-            Log.d(TAG, "Got an ip for interfarce wlan0");
-            return inetAddress;
-        }
-
-        inetAddress = getLocalIpAdressFromIntf("usb0");
-        if(inetAddress!=null)
-        {
-            Log.d(TAG, "Got an ip for interfarce usb0");
-            return inetAddress;
-        }
-
-        return InetAddress.getByName("0.0.0.0");
-    }
-    private static InetAddress getLocalIpAdressFromIntf(String intfName)
-    {
-        try
-        {
-            NetworkInterface intf = NetworkInterface.getByName(intfName);
-            if(intf.isUp())
-            {
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();)
-                {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address)
-                        return inetAddress;
-                }
-            }
-        } catch (Exception e) {
-            Log.w(TAG, "Unable to get ip adress for interface " + intfName);
-        }
-        return null;
-    }
     /*********************************/
     /**     Device Array Adapter    **/
     /**     w/ Registry Listener    **/
@@ -477,12 +401,13 @@ public class ServerFragment extends ListFragment
          */
         public void deviceAdded(final Device<?, ?, ?> device) {
             if (SHOW_LOG) Log.d(TAG, "deviceAdded");
+            if (getActivity()==null) return;
             for (int i = 0; i < getCount(); i++) {
                 if (getItem(i).equals(device)) {
                     return;
                 }
             }
-            ServerFragment.this.getMainActivity().runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if (device.getType().getType().equals(DeviceArrayAdapter.this.deviceType)) {
@@ -499,13 +424,14 @@ public class ServerFragment extends ListFragment
                     }
                 }
             });
-            notifyDataSetChanged();
+            //notifyDataSetChanged();
         }
         /**
          * Removes the device from the list (if it is an element).
          */
         public void deviceRemoved(final Device<?, ?, ?> device) {
             if (SHOW_LOG) Log.d(TAG, "deviceRemoved");
+            if (ServerFragment.this.getMainActivity()==null) return;
             ServerFragment.this.getMainActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -514,7 +440,7 @@ public class ServerFragment extends ListFragment
                     }
                 }
             });
-            notifyDataSetChanged();
+            //notifyDataSetChanged();
         }
         @Override
         public void remoteDeviceDiscoveryFailed(Registry registry, RemoteDevice device, Exception ex) {
@@ -537,6 +463,7 @@ public class ServerFragment extends ListFragment
         @Override
         public void afterShutdown() { }
     }
+
     /*********************************/
     /**     List's View Holder      **/
     /*********************************/
