@@ -231,15 +231,6 @@ public class MainActivity extends AppCompatActivity{
             default:
         }
     }
-
-    /**
-     * Set the route fragment to start playing from a playlist and position on the playlist
-     * @param playlist to be added to routeFragment's playlist
-     * @param position to play from
-     */
-    public void play(List<Item> playlist, int position) {
-        this.routeFragment.play(playlist, position);
-    }
     /**
      * Set the Title in Action Bar to correspond with selected item from the navigation drawer
      */
@@ -334,23 +325,6 @@ public class MainActivity extends AppCompatActivity{
         };
     }
     /**
-     * Checks if there is any Fragment in the backstack and replace Content Frame with the last inserted Fragment on the backstack
-     * Go to android home screen otherwise
-     */
-    @Override
-    public void onBackPressed() {
-        if (SHOW_LOG) Log.d(TAG, "onBackPressed");
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawers();
-            return;
-        }
-        if (getLastFragment()) return;
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-    /**
      * Get the Last Fragment added onto the BackStack on the FragmentManager
      * @return true if the Fragment can be obtained, false if stack is empty.
      */
@@ -389,6 +363,16 @@ public class MainActivity extends AppCompatActivity{
         System.exit(1);
     }
     /**
+     * Set the route fragment to start playing from a playlist and position on the playlist
+     * @param playlist to be added to routeFragment's playlist
+     * @param startPosition tp start playback from till the end of playlist
+     */
+    public void play(List<Item> playlist, int startPosition) {
+        if (SHOW_LOG) Log.d(TAG, "play");
+        this.helper.setCurrentPage(0);
+        this.routeFragment.play(playlist, startPosition);
+    }
+    /**
      * Set the refresh icon to spinning ProgressBar when refreshing or loading views
      * @param refresh if true, change the view of the refresh button to spinning, static otherwise
      */
@@ -421,5 +405,28 @@ public class MainActivity extends AppCompatActivity{
      */
     public interface OnBackPressedListener {
         boolean onBackPressed();
+    }
+    /**
+     * Checks if there is any Fragment in the backstack and replace Content Frame with the last inserted Fragment on the backstack
+     * Go to android home screen otherwise
+     */
+    @Override
+    public void onBackPressed() {
+        if (SHOW_LOG) Log.d(TAG, "onBackPressed");
+        // Closes drawer if opened
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawers();
+            return;
+        }
+        // Listens to backpresslistener inside currentFragment first
+        if (this.helper.getCurrentFragment() instanceof OnBackPressedListener) {
+            OnBackPressedListener currentFragment = (OnBackPressedListener) this.helper.getCurrentFragment();
+            if (currentFragment.onBackPressed()) return;
+        }
+        if (getLastFragment()) return;
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

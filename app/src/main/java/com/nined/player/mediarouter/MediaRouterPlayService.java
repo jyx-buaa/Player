@@ -94,6 +94,7 @@ public class MediaRouterPlayService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (SHOW_LOG) Log.i(TAG, "onCreate");
         mediaRouter = MediaRouter.getInstance(this);
         pollStatus();
         phoneCallListener = createPhoneCallListener();
@@ -109,12 +110,14 @@ public class MediaRouterPlayService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
+        if (SHOW_LOG) Log.i(TAG, "onBind");
         bound = true;
         return binder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
+        if (SHOW_LOG) Log.i(TAG, "onUnbind");
         if (this.pollingStatus) {
             stopSelf();
         }
@@ -124,6 +127,7 @@ public class MediaRouterPlayService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (SHOW_LOG) Log.i(TAG, "onDestroy");
         if (mediaRouter!=null)
             mediaRouter.removeCallback(mediaRouterCallback);
     }
@@ -220,6 +224,7 @@ public class MediaRouterPlayService extends Service {
      * @param seconds
      */
     public void seek(int seconds) {
+        if (SHOW_LOG) Log.i(TAG, "seek");
         if (this.playlist==null || this.playlist.isEmpty()) return;
 
         Intent seekIntent = new Intent(MediaControlIntent.ACTION_SEEK);
@@ -235,6 +240,7 @@ public class MediaRouterPlayService extends Service {
      * @param trackNumber number of track from playlist to be played
      */
     public void play(int trackNumber) {
+        if (SHOW_LOG) Log.i(TAG, "play");
         if (trackNumber < 0 || trackNumber >= this.playlist.size()) return;
 
         this.currentTrack = trackNumber;
@@ -272,6 +278,7 @@ public class MediaRouterPlayService extends Service {
      * Sends a 'pause' signal to current renderer
      */
     public void pause() {
+        if (SHOW_LOG) Log.i(TAG, "pause");
         if (this.playlist.isEmpty()) return;
 
         Intent intent = new Intent(MediaControlIntent.ACTION_PAUSE);
@@ -286,6 +293,7 @@ public class MediaRouterPlayService extends Service {
      * Sends a 'stop' signal to current renderer
      */
     public void stop() {
+        if (SHOW_LOG) Log.i(TAG, "stop");
         if (this.playlist.isEmpty()) return;
 
         Intent intent = new Intent(MediaControlIntent.ACTION_STOP);
@@ -300,6 +308,7 @@ public class MediaRouterPlayService extends Service {
      * Sends a 'resume' signal to current renderrer
      */
     public void resume() {
+        if (SHOW_LOG) Log.i(TAG, "resume");
         if (this.playlist.isEmpty()) return;
 
         Intent intent = new Intent(MediaControlIntent.ACTION_RESUME);
@@ -316,6 +325,7 @@ public class MediaRouterPlayService extends Service {
      * @return true when able to find a next track to play, false otherwise.
      */
     public boolean playNext() {
+        if (SHOW_LOG) Log.i(TAG, "playNext");
         if (this.currentTrack==-1) return false;
         if (this.shuffleEnabled) {
             play(new Random().nextInt(this.playlist.size()));
@@ -339,6 +349,7 @@ public class MediaRouterPlayService extends Service {
      * @return true when able to find a previous track to play, false otherwise.
      */
     public boolean playPrevious() {
+        if (SHOW_LOG) Log.i(TAG, "playPrevious");
         if (this.currentTrack==-1) return false;
         if (this.shuffleEnabled) {
             play(new Random().nextInt(this.playlist.size()));
@@ -352,6 +363,7 @@ public class MediaRouterPlayService extends Service {
      * Increare the volume at the current renderer by one arbitrary unit
      */
     public void increaseVolume() {
+        if (SHOW_LOG) Log.i(TAG, "increaseVolume");
         if (this.mediaRouter!=null)
             this.mediaRouter.getSelectedRoute().requestUpdateVolume(1);
     }
@@ -360,6 +372,7 @@ public class MediaRouterPlayService extends Service {
      * Decrease the volume at the current renderer by one arbitrary unit
      */
     public void decreaseVolume() {
+        if (SHOW_LOG) Log.i(TAG, "decreaseVolume");
         if (this.mediaRouter!=null)
             this.mediaRouter.getSelectedRoute().requestUpdateVolume(-1);
     }
@@ -371,6 +384,7 @@ public class MediaRouterPlayService extends Service {
      * is attached or media is playing
      */
     private void pollStatus() {
+        if (SHOW_LOG) Log.i(TAG, "pollStatus");
         if (this.pollingStatus && this.sessionId != null && this.itemId !=null) {
             Intent pollIntent = new Intent(MediaControlIntent.ACTION_GET_STATUS);
             pollIntent.putExtra(MediaControlIntent.EXTRA_SESSION_ID, this.sessionId);
@@ -449,6 +463,7 @@ public class MediaRouterPlayService extends Service {
      * @param track number of track on the playlist to be played
      */
     public void setCurrentTrack(int track) {
+        if (SHOW_LOG) Log.i(TAG, "setCurrentTrack");
         if (this.playlist==null || this.playlist.isEmpty())
             return;
         if (track>=0 &&track< this.playlist.size())
@@ -481,6 +496,7 @@ public class MediaRouterPlayService extends Service {
      * @param route to be selected by MediaRouter
      */
     public void setRoute(RouteInfo route) {
+        if (SHOW_LOG) Log.i(TAG, String.format("Set Route: %s", route.getDescription()));
         this.mediaRouter.selectRoute(route);
         this.currentRoute = route;
     }

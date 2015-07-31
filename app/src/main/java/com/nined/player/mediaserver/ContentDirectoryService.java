@@ -26,11 +26,11 @@ import android.util.Log;
 import com.nined.player.R;
 import com.nined.player.client.PlayerApi;
 import com.nined.player.mediaserver.localContent.AlbumContainer;
+import com.nined.player.mediaserver.localContent.ArtistContainer;
 import com.nined.player.mediaserver.localContent.AudioContainer;
 import com.nined.player.mediaserver.localContent.ImageContainer;
 import com.nined.player.mediaserver.localContent.VideoContainer;
 import com.nined.player.mediaserver.localContent.base.CustomContainer;
-import com.nined.player.model.cling.local.ArtistContainer;
 import com.nined.player.utils.PrefUtils;
 
 import org.fourthline.cling.support.contentdirectory.AbstractContentDirectoryService;

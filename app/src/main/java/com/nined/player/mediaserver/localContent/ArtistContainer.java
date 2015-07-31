@@ -1,4 +1,4 @@
-package com.nined.player.model.cling.local;
+package com.nined.player.mediaserver.localContent;
 /**
  * Copyright (C) 2013 Aur?lien Chabot <aurelien@chabot.fr>
  *
@@ -23,7 +23,7 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.nined.player.model.cling.local.base.DynamicContainer;
+import com.nined.player.mediaserver.localContent.base.DynamicContainer;
 
 import org.fourthline.cling.support.model.container.Container;
 

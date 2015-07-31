@@ -21,7 +21,6 @@ package com.nined.player.mediaserver.localContent.base;
 
 import com.nined.player.mediaserver.ContentDirectoryService;
 
-import org.fourthline.cling.support.model.DIDLObject;
 import org.fourthline.cling.support.model.WriteStatus;
 import org.fourthline.cling.support.model.container.Container;
 
@@ -31,7 +30,7 @@ public class CustomContainer extends Container
 
     public CustomContainer(String id, String parentID, String title, String creator, String baseURL)
     {
-        this.setClazz(new DIDLObject.Class("object.container"));
+        this.setClazz(new Class("object.container"));
 
         if(parentID==null || parentID.compareTo(""+ ContentDirectoryService.ROOT_ID)==0)
             setId(id);

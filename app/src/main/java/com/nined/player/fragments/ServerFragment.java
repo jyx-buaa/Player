@@ -477,11 +477,17 @@ public class ServerFragment extends ListFragment
     }
 
     /*********************************/
-    /**     Back Press Listener     **/
+    /**   Back Pressed Listener     **/
     /*********************************/
     @Override
     public boolean onBackPressed() {
-        return false;
+        if (getListAdapter() == this.deviceAdapter) return false;
+        this.currentPath.pop();
+        if (currentPath.isEmpty()) serverMode();
+        else {
+            getFiles(true);
+        }
+        return true;
     }
 
     protected MainActivity getMainActivity() {

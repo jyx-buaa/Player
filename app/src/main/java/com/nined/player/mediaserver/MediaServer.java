@@ -90,13 +90,13 @@ public class MediaServer extends fi.iki.elonen.SimpleWebServer
     public void restart()
     {
         if (SHOW_LOG) Log.d(TAG, "Restart mediaServer");
-//		try {
-//			stop();
-//			createLocalDevice();
-//			start();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		try {
+			stop();
+			createLocalDevice();
+			start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 
     public void createLocalDevice() throws ValidationException
@@ -137,7 +137,7 @@ public class MediaServer extends fi.iki.elonen.SimpleWebServer
     }
 
     @SuppressWarnings("unused")
-    public class InvalidIdentificatorException extends java.lang.Exception
+    public class InvalidIdentificatorException extends Exception
     {
         public InvalidIdentificatorException(){super();}
         public InvalidIdentificatorException(String message){super(message);}
@@ -241,14 +241,21 @@ public class MediaServer extends fi.iki.elonen.SimpleWebServer
             try
             {
                 ServerObject obj = getFileServerObject(uri);
-
                 if (SHOW_LOG) Log.i(TAG, "Will serve " + obj.path);
+                //TODO
+                //FileInputStream fis = new FileInputStream(uri);
+                //if (SHOW_LOG) Log.i(TAG, "Will serve " + fis.getFD());
+                //return newChunkedResponse(Response.Status.OK, obj.mime, fis);
                 res = serveFile(uri, header, new File(obj.path), obj.mime);
             }
             catch(InvalidIdentificatorException e)
             {
                 return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "Error 404, file not found.");
-            }
+            } //TODO
+            /*catch (FileNotFoundException fe) {
+                if (SHOW_LOG) Log.e(TAG, "File not found");
+                return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "Error 404, file not found.");
+            }*/
 
             if( res != null )
             {

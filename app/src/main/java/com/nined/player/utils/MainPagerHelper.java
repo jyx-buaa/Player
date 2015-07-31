@@ -136,9 +136,15 @@ public class MainPagerHelper implements ViewPager.OnPageChangeListener {
     }
 
     /**
-     * @param currentPage to set
+     * @param pos position to set
      */
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
+    public void setCurrentPage(int pos) {
+        if (this.pager==null) return;
+        this.currentPage = pos;
+        this.pager.setCurrentItem(this.currentPage);
+    }
+
+    public Fragment getCurrentFragment() {
+        return this.adapter.fragments.get(pager.getCurrentItem());
     }
 }

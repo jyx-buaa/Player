@@ -398,6 +398,7 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
      */
     @Override
     public boolean onBackPressed() {
+        if (SHOW_LOG) Log.d(TAG, "onBackPressed");
         if (list.getAdapter() == this.playlistAdapter) {
             if (this.playing) {
                 new AlertDialog.Builder(getActivity())
@@ -427,9 +428,10 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
      * Plays/pauses playback on button click.
      */
     @OnClick({SHUFFLE, PLAYPAUSE, REPEAT, PREVIOUS, NEXT})
-    protected void controlButtonClicked(ImageButton button) {
+    protected void controlButtonPressed(ImageButton button) {
         switch(button.getId()) {
             case PLAYPAUSE:
+                if (SHOW_LOG) Log.d(TAG, "PLAYPAUSE pressed");
                 if (this.playing) {
                     this.mediaRouterPlayService.pause();
                     changePlayPauseState(false);
@@ -441,9 +443,11 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
                 break;
             case SHUFFLE:
                 this.mediaRouterPlayService.toggleShuffleEnabled();
+                if (SHOW_LOG) Log.d(TAG, "SHUFFLE toggled: " + this.mediaRouterPlayService.isRepeatEnabled());
                 applyColors();
                 break;
             case PREVIOUS:
+                if (SHOW_LOG) Log.d(TAG, "PREVIOUS pressed");
                 this.previousTapCount++;
                 Handler handler = new Handler();
                 Runnable r = new Runnable() {
@@ -464,11 +468,13 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
                 }
                 break;
             case NEXT:
+                if (SHOW_LOG) Log.d(TAG, "NEXT pressed");
                 boolean stillPlaying = this.mediaRouterPlayService.playNext();
                 changePlayPauseState(stillPlaying);
                 break;
             case REPEAT:
                 this.mediaRouterPlayService.toggleRepeatEnabled();
+                if (SHOW_LOG) Log.d(TAG, "REPEAT toggled: " + this.mediaRouterPlayService.isRepeatEnabled());
                 applyColors();
                 break;
             default:
@@ -479,6 +485,7 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
      * if they are enabled or disabled).
      */
     private void applyColors() {
+        if (SHOW_LOG) Log.d(TAG, "applyColors");
         if (this.controlButtons==null || this.controlButtons.isEmpty()) return;
         int highlight = getResources().getColor(R.color.button_highlight);
         int transparent = getResources().getColor(android.R.color.transparent);
@@ -527,6 +534,7 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
      * Applies the playlist and starts playing at position.
      */
     public void play(List<Item> playlist, int start) {
+        if (SHOW_LOG) Log.d(TAG, "play");
         this.playlistAdapter.clear();
         this.playlistAdapter.add(playlist);
         this.mediaRouterPlayService.setPlaylist(playlist);
@@ -614,13 +622,11 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
             // PLAYPAUSE state changed
             this.controlButtons.get(1).setImageResource(R.drawable.ic_action_pause);
             this.controlButtons.get(1).setContentDescription(getResources().getString(R.string.route_pause));
-            getMainActivity().setRefreshActionButtonState(false);
         }
         else {
             // PLAYPAUSE state changed
             this.controlButtons.get(1).setImageResource(R.drawable.ic_action_play);
             this.controlButtons.get(1).setContentDescription(getResources().getString(R.string.route_play));
-            getMainActivity().setRefreshActionButtonState(true);
         }
     }
 
