@@ -28,6 +28,9 @@ repositories {
     maven {
         url 'http://4thline.org/m2'
     }
+    maven {
+        url 'http://http://nanohttpd.org/m2'
+    }
 }
 
 dependencies {
@@ -80,6 +83,7 @@ dependencies {
     compile ('org.fourthline.cling:cling-support:2.0.1') {
         exclude (group:'org.fourthline.cling', module:'META-INF/beans.xml')
     }
+
 
     /**
      * PayPal Dependency Conflict Resolve

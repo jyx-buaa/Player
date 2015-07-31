@@ -33,41 +33,14 @@ package fi.iki.elonen;
  * #L%
  */
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+/**
+ * @author Paul S. Hawke (paul.hawke@gmail.com) On: 9/14/13 at 8:09 AM
+ */
+public interface WebServerPluginInfo {
 
-public class ServerRunner {
+    String[] getIndexFilesForMimeType(String mime);
 
-    /**
-     * logger to log to.
-     */
-    private static final Logger LOG = Logger.getLogger(ServerRunner.class.getName());
+    String[] getMimeTypes();
 
-    public static void executeInstance(NanoHTTPD server) {
-        try {
-            server.start();
-        } catch (IOException ioe) {
-            System.err.println("Couldn't start server:\n" + ioe);
-            System.exit(-1);
-        }
-
-        System.out.println("Server started, Hit Enter to stop.\n");
-
-        try {
-            System.in.read();
-        } catch (Throwable ignored) {
-        }
-
-        server.stop();
-        System.out.println("Server stopped.\n");
-    }
-
-    public static <T extends NanoHTTPD> void run(Class<T> serverClass) {
-        try {
-            executeInstance(serverClass.newInstance());
-        } catch (Exception e) {
-            ServerRunner.LOG.log(Level.SEVERE, "Cound nor create server", e);
-        }
-    }
+    WebServerPlugin getWebServerPlugin(String mimeType);
 }

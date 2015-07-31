@@ -33,41 +33,31 @@ package fi.iki.elonen;
  * #L%
  */
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.ByteArrayInputStream;
+import java.util.Map;
 
-public class ServerRunner {
+import fi.iki.elonen.NanoHTTPD.Response;
 
-    /**
-     * logger to log to.
-     */
-    private static final Logger LOG = Logger.getLogger(ServerRunner.class.getName());
+/**
+ * @author Paul S. Hawke (paul.hawke@gmail.com) On: 9/15/13 at 2:52 PM
+ */
+public class InternalRewrite extends Response {
 
-    public static void executeInstance(NanoHTTPD server) {
-        try {
-            server.start();
-        } catch (IOException ioe) {
-            System.err.println("Couldn't start server:\n" + ioe);
-            System.exit(-1);
-        }
+    private final String uri;
 
-        System.out.println("Server started, Hit Enter to stop.\n");
+    private final Map<String, String> headers;
 
-        try {
-            System.in.read();
-        } catch (Throwable ignored) {
-        }
-
-        server.stop();
-        System.out.println("Server stopped.\n");
+    public InternalRewrite(Map<String, String> headers, String uri) {
+        super(Status.OK, NanoHTTPD.MIME_HTML, new ByteArrayInputStream(new byte[0]), 0);
+        this.headers = headers;
+        this.uri = uri;
     }
 
-    public static <T extends NanoHTTPD> void run(Class<T> serverClass) {
-        try {
-            executeInstance(serverClass.newInstance());
-        } catch (Exception e) {
-            ServerRunner.LOG.log(Level.SEVERE, "Cound nor create server", e);
-        }
+    public Map<String, String> getHeaders() {
+        return this.headers;
+    }
+
+    public String getUri() {
+        return this.uri;
     }
 }
