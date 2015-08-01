@@ -46,6 +46,7 @@ import org.fourthline.cling.model.types.UDADeviceType;
 import org.fourthline.cling.model.types.UDN;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.InetAddress;
 import java.util.Collections;
 import java.util.List;
@@ -246,20 +247,19 @@ public class MediaServer extends SimpleWebServer
             {
                 ServerObject obj = getFileServerObject(uri);
                 if (SHOW_LOG) Log.i(TAG, "Will serve " + obj.path);
-                //TODO
-                //FileInputStream fis = new FileInputStream(uri);
-                //if (SHOW_LOG) Log.i(TAG, "Will serve " + fis.getFD());
-                res = new Response(Response.Status.PARTIAL_CONTENT, obj.mime, new FileInputStream(uri));
-                //res = new Response(uri, header, new File(obj.path), obj.mime);
+                FileInputStream fis = new FileInputStream(uri);
+                if (SHOW_LOG) Log.i(TAG, "File Stream: " + fis.getFD());
+                res = new Response(Response.Status.OK, obj.mime, fis);
+                //return new Response(Response.Status.OK, obj.mime, fis);
             }
             catch(InvalidIdentificatorException e)
             {
                 return new Response(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "Error 404, file not found.");
-            } //TODO
-            /*catch (FileNotFoundException fe) {
+            }
+            catch (FileNotFoundException fe) {
                 if (SHOW_LOG) Log.e(TAG, "File not found");
-                return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "Error 404, file not found.");
-            }*/
+                return new Response(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "Error 404, file not found.");
+            }
 
             if( res != null )
             {
@@ -276,7 +276,6 @@ public class MediaServer extends SimpleWebServer
                 res.addHeader("transferMode.dlna.org", "Streaming");
                 res.addHeader("Server", "DLNADOC/1.50 UPnP/1.0 Cling/2.0 DroidUPnP/"+version +" Android/" + Build.VERSION.RELEASE);
             }
-
             return res;
         }
         catch(Exception e)
