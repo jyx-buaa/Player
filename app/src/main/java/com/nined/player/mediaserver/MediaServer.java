@@ -45,14 +45,18 @@ import org.fourthline.cling.model.types.DeviceType;
 import org.fourthline.cling.model.types.UDADeviceType;
 import org.fourthline.cling.model.types.UDN;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.net.InetAddress;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class MediaServer extends fi.iki.elonen.SimpleWebServer
+import fi.iki.elonen.SimpleWebServer;
+
+//import fi.iki.elonen.SimpleWebServer;
+
+public class MediaServer extends SimpleWebServer
 {
     private static final String TAG = MediaServer.class.getSimpleName();
     private static final boolean SHOW_LOG = true;
@@ -245,12 +249,12 @@ public class MediaServer extends fi.iki.elonen.SimpleWebServer
                 //TODO
                 //FileInputStream fis = new FileInputStream(uri);
                 //if (SHOW_LOG) Log.i(TAG, "Will serve " + fis.getFD());
-                //return newChunkedResponse(Response.Status.OK, obj.mime, fis);
-                res = serveFile(uri, header, new File(obj.path), obj.mime);
+                res = new Response(Response.Status.PARTIAL_CONTENT, obj.mime, new FileInputStream(uri));
+                //res = new Response(uri, header, new File(obj.path), obj.mime);
             }
             catch(InvalidIdentificatorException e)
             {
-                return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "Error 404, file not found.");
+                return new Response(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "Error 404, file not found.");
             } //TODO
             /*catch (FileNotFoundException fe) {
                 if (SHOW_LOG) Log.e(TAG, "File not found");
@@ -281,6 +285,6 @@ public class MediaServer extends fi.iki.elonen.SimpleWebServer
             if (SHOW_LOG) Log.e(TAG, "exception", e);
         }
 
-        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_PLAINTEXT, "INTERNAL ERROR: unexpected error.");
+        return new Response(Response.Status.INTERNAL_ERROR, MIME_PLAINTEXT, "INTERNAL ERROR: unexpected error.");
     }
 }

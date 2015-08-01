@@ -323,7 +323,8 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
         if (list.getAdapter() == this.routeAdapter) {
             playlistMode(this.routeAdapter.getItem(position));
         }
-        else {
+        else if (list.getAdapter() == this.playlistAdapter) {
+            this.playlistAdapter.getItem(position);
             this.mediaRouterPlayService.play(position);
             changePlayPauseState(true);
         }
@@ -392,38 +393,6 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
             this.currentTrack.setBackgroundColor(Color.TRANSPARENT);
         }
     }
-
-    /**
-     * Unselects current media renderer if one is selected (with dialog).
-     */
-    @Override
-    public boolean onBackPressed() {
-        if (SHOW_LOG) Log.d(TAG, "onBackPressed");
-        if (list.getAdapter() == this.playlistAdapter) {
-            if (this.playing) {
-                new AlertDialog.Builder(getActivity())
-                        .setMessage(R.string.exit_renderer)
-                        .setPositiveButton(android.R.string.yes,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        RouteFragment.this.mediaRouterPlayService.stop();
-                                        changePlayPauseState(false);
-                                        deviceListMode();
-                                    }
-                                })
-                        .setNegativeButton(android.R.string.no, null)
-                        .show();
-            }
-            else {
-                deviceListMode();
-            }
-            return true;
-        }
-        return false;
-    }
-
     /**
      * Plays/pauses playback on button click.
      */
@@ -584,6 +553,7 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
      */
     public void receivePlaybackStatus(MediaItemStatus status) {
         // Views may not exist if fragment was just created/destroyed.
+        if (SHOW_LOG) Log.d(TAG, "Received Playback Status: " + status.toString());
         if (getView() == null)
             return;
 
@@ -718,8 +688,42 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
             ButterKnife.bind(this, view);
         }
     }
+    /**
+     * Unselects current media renderer if one is selected (with dialog).
+     */
+    @Override
+    public boolean onBackPressed() {
+        if (SHOW_LOG) Log.d(TAG, "onBackPressed");
+        if (list.getAdapter() == this.playlistAdapter) {
+            if (this.playing) {
+                new AlertDialog.Builder(getActivity())
+                        .setMessage(R.string.exit_renderer)
+                        .setPositiveButton(android.R.string.yes,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog,
+                                                        int which) {
+                                        RouteFragment.this.mediaRouterPlayService.stop();
+                                        changePlayPauseState(false);
+                                        deviceListMode();
+                                    }
+                                })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+            }
+            else {
+                deviceListMode();
+            }
+            return true;
+        }
+        return false;
+    }
 
-/*    protected void playTaiChi() {
+    protected MainActivity getMainActivity() {
+        return (MainActivity) getActivity();
+    }
+
+    /*protected void playTaiChi() {
         //DIDLContent didl = new DIDLContent();
         String album = ("Aeka in the dark");
         String creator = "9D Technolgoies"; // Required
@@ -735,8 +739,4 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
         ));
         play(items,0);
     }*/
-
-    protected MainActivity getMainActivity() {
-        return (MainActivity) getActivity();
-    }
 }

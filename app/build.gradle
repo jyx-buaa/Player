@@ -19,18 +19,16 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/beans.xml'
-        exclude 'META-INF/LICENSE.txt'
+        //exclude 'META-INF/LICENSE.txt'
+        exclude 'LICENSE.txt'
     }
 }
 
 repositories {
     mavenCentral()
-    // For Cling library used in UPnP support
+    // Set up Maven Repo for Cling library used to integrate UPnP support
     maven {
         url 'http://4thline.org/m2'
-    }
-    maven {
-        url 'http://http://nanohttpd.org/m2'
     }
 }
 
@@ -39,8 +37,8 @@ dependencies {
     /**
      * Android Support Libraries
      */
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.android.support:support-v4:22.2.0'
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:support-v4:22.2.1'
     compile 'com.android.support:mediarouter-v7:22.2.0'
     /**
      * ButterKnife
@@ -85,8 +83,17 @@ dependencies {
     compile group: 'org.eclipse.jetty', name: 'jetty-server', version:'8.1.12.v20130726'
     compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version:'8.1.12.v20130726'
     compile group: 'org.eclipse.jetty', name: 'jetty-client', version:'8.1.12.v20130726'
-
-
+    /**
+     * NanoHttpd: Media Server
+     */
+    compile group: 'com.nanohttpd',                 name:'nanohttpd',           version:'2.1.1'
+    compile group: 'com.nanohttpd',               name:'nanohttpd-webserver', version:'2.1.1'
+    //compile group:'com.nanohttpd',                  name:'nanohttpd-webserver-markdown-plugin', version:'2.1.1'
+    testCompile group: 'junit',                     name: 'junit',              version: '4.8.2'
+    testCompile group: 'commons-logging',           name: 'commons-logging',    version:'1.1.1'
+    testCompile group: 'commons-codec',             name:'commons-codec',       version:'1.10'
+    testCompile group: 'org.apache.httpcomponents', name: 'httpclient',         version: '4.3.5'
+    testCompile group: 'org.apache.httpcomponents', name: 'httpmime',           version: '4.2.5'
     /**
      * PayPal Dependency Conflict Resolve
      */
@@ -95,6 +102,6 @@ dependencies {
             exclude (group:'org.apache.httpcomponents', module:'httpclient')
         }*/
     compile project(':libvlc')
-    compile project(':nanohttpd')
+    //compile project(':nanohttpd')
 }
 

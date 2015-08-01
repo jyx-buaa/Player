@@ -1,1 +1,1 @@
-include ':app', ':libvlc', ':nanohttpd'
+include ':app', ':libvlc'

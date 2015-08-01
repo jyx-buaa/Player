@@ -251,6 +251,7 @@ public class MediaRouterPlayService extends Service {
         String metadata = "";
         try {
             metadata = parser.generate(didl, true);
+            if (SHOW_LOG) Log.w(TAG, "Metadata added to DIDLContent: " + metadata);
         } catch (Exception e) {
             if (SHOW_LOG) Log.w(TAG, "Metadata generation failed", e);
         }
@@ -389,7 +390,7 @@ public class MediaRouterPlayService extends Service {
             Intent pollIntent = new Intent(MediaControlIntent.ACTION_GET_STATUS);
             pollIntent.putExtra(MediaControlIntent.EXTRA_SESSION_ID, this.sessionId);
             pollIntent.putExtra(MediaControlIntent.EXTRA_ITEM_ID, this.itemId);
-
+            if (this.mediaRouter.getSelectedRoute()==null && SHOW_LOG) Log.w(TAG, "No selected route found");
             this.mediaRouter.getSelectedRoute().sendControlRequest(pollIntent,
                     new MediaRouter.ControlRequestCallback() {
                         @Override
@@ -403,7 +404,10 @@ public class MediaRouterPlayService extends Service {
                         public void onResult(Bundle data) {
                             super.onResult(data);
                             MediaItemStatus status = MediaItemStatus.fromBundle(data);
-                            if (status == null) return;
+                            if (status == null) {
+                                if (SHOW_LOG) Log.d(TAG, "status is null!");
+                                return;
+                            }
                             if (routeFragment.get() != null)
                                 routeFragment.get().receivePlaybackStatus(status);
                             switch (status.getPlaybackState()) {

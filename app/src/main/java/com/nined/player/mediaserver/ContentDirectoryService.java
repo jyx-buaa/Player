@@ -115,7 +115,7 @@ public class ContentDirectoryService extends AbstractContentDirectoryService
             ss.setString(objectID);
 
             int type = -1;
-            ArrayList<Integer> subtype = new ArrayList<Integer>();
+            ArrayList<Integer> subtype = new ArrayList<>();
 
             for (String s : ss)
             {
