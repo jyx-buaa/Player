@@ -77,7 +77,7 @@ public class ContentDirectoryService extends AbstractContentDirectoryService
     public final static String DIRECTORY_PREFIX = "d-";
 
 
-    private static Context ctx;
+    private static Context context;
     private static String baseURL;
 
     public ContentDirectoryService()
@@ -85,15 +85,15 @@ public class ContentDirectoryService extends AbstractContentDirectoryService
         if (SHOW_LOG) Log.v(TAG, "Call default constructor...");
     }
 
-    public ContentDirectoryService(Context ctx, String baseURL)
+    public ContentDirectoryService(Context context, String baseURL)
     {
-        this.ctx = ctx;
+        this.context = context;
         this.baseURL = baseURL;
     }
 
-    public void setContext(Context ctx)
+    public void setContext(Context context)
     {
-        this.ctx = ctx;
+        this.context = context;
     }
 
     public void setBaseURL(String baseURL)
@@ -137,20 +137,20 @@ public class ContentDirectoryService extends AbstractContentDirectoryService
             if (SHOW_LOG) Log.d(TAG, "Browsing type " + type);
 
             Container rootContainer = new CustomContainer( "" + ROOT_ID, "" + ROOT_ID,
-                    ctx.getString(R.string.app_name), ctx.getString(R.string.app_name), baseURL);
+                    context.getString(R.string.app_name), context.getString(R.string.app_name), baseURL);
 
 
             // Video
             Container videoContainer = null, allVideoContainer = null;
-            if(PrefUtils.getBoolean(this.ctx, PlayerApi.CONTENTDIRECTORY_VIDEO, true))
+            if(PrefUtils.getBoolean(this.context, PlayerApi.CONTENTDIRECTORY_VIDEO, true))
             {
                 videoContainer = new CustomContainer( "" + VIDEO_ID, "" + ROOT_ID,
-                        VIDEO_TXT, ctx.getString(R.string.app_name), baseURL);
+                        VIDEO_TXT, context.getString(R.string.app_name), baseURL);
                 rootContainer.addContainer(videoContainer);
                 rootContainer.setChildCount(rootContainer.getChildCount()+1);
 
                 allVideoContainer = new VideoContainer( ""+ ALL_ID, "" + VIDEO_ID,
-                        "All", ctx.getString(R.string.app_name), baseURL, ctx);
+                        "All", context.getString(R.string.app_name), baseURL, context);
                 videoContainer.addContainer(allVideoContainer);
                 videoContainer.setChildCount(videoContainer.getChildCount()+1);
             }
@@ -158,40 +158,40 @@ public class ContentDirectoryService extends AbstractContentDirectoryService
             // Audio
             Container audioContainer = null, artistAudioContainer = null, albumAudioContainer = null,
                     allAudioContainer = null;
-            if(PrefUtils.getBoolean(this.ctx, PlayerApi.CONTENTDIRECTORY_AUDIO, true))
+            if(PrefUtils.getBoolean(this.context, PlayerApi.CONTENTDIRECTORY_AUDIO, true))
             {
                 audioContainer = new CustomContainer( "" + AUDIO_ID, "" + ROOT_ID,
-                        AUDIO_TXT, ctx.getString(R.string.app_name), baseURL);
+                        AUDIO_TXT, context.getString(R.string.app_name), baseURL);
                 rootContainer.addContainer(audioContainer);
                 rootContainer.setChildCount(rootContainer.getChildCount()+1);
 
                 artistAudioContainer = new ArtistContainer( "" + ARTIST_ID, "" + AUDIO_ID,
-                        "Artist", ctx.getString(R.string.app_name), baseURL, ctx);
+                        "Artist", context.getString(R.string.app_name), baseURL, context);
                 audioContainer.addContainer(artistAudioContainer);
-                audioContainer.setChildCount(audioContainer.getChildCount()+1);
+                audioContainer.setChildCount(audioContainer.getChildCount() + 1);
 
                 albumAudioContainer = new AlbumContainer( "" + ALBUM_ID, "" + AUDIO_ID,
-                        "Album", ctx.getString(R.string.app_name), baseURL, ctx, null);
+                        "Album", context.getString(R.string.app_name), baseURL, context, null);
                 audioContainer.addContainer(albumAudioContainer);
                 audioContainer.setChildCount(audioContainer.getChildCount()+1);
 
                 allAudioContainer = new AudioContainer("" + ALL_ID, "" + AUDIO_ID,
-                        "All", ctx.getString(R.string.app_name), baseURL, ctx, null, null);
+                        "All", context.getString(R.string.app_name), baseURL, context, null, null);
                 audioContainer.addContainer(allAudioContainer);
                 audioContainer.setChildCount(audioContainer.getChildCount()+1);
             }
 
             // Image
             Container imageContainer = null, allImageContainer = null;
-            if(PrefUtils.getBoolean(this.ctx, PlayerApi.CONTENTDIRECTORY_IMAGE, true))
+            if(PrefUtils.getBoolean(this.context, PlayerApi.CONTENTDIRECTORY_IMAGE, true))
             {
                 imageContainer = new CustomContainer( "" + IMAGE_ID, "" + ROOT_ID, IMAGE_TXT,
-                        ctx.getString(R.string.app_name), baseURL);
+                        context.getString(R.string.app_name), baseURL);
                 rootContainer.addContainer(imageContainer);
                 rootContainer.setChildCount(rootContainer.getChildCount()+1);
 
                 allImageContainer = new ImageContainer( "" + ALL_ID, "" + IMAGE_ID, "All",
-                        ctx.getString(R.string.app_name), baseURL, ctx);
+                        context.getString(R.string.app_name), baseURL, context);
                 imageContainer.addContainer(allImageContainer);
                 imageContainer.setChildCount(imageContainer.getChildCount()+1);
             }
@@ -240,7 +240,7 @@ public class ContentDirectoryService extends AbstractContentDirectoryService
                         String parentId = "" + AUDIO_ID + SEPARATOR + subtype.get(0);
                         if (SHOW_LOG) Log.d(TAG, "Listing album of artist " + artistId);
                         container = new AlbumContainer(artistId, parentId, "",
-                                ctx.getString(R.string.app_name), baseURL, ctx, artistId);
+                                context.getString(R.string.app_name), baseURL, context, artistId);
                     }
                     else if(subtype.size()==2 && subtype.get(0) == ALBUM_ID)
                     {
@@ -248,7 +248,7 @@ public class ContentDirectoryService extends AbstractContentDirectoryService
                         String parentId = "" + AUDIO_ID + SEPARATOR + subtype.get(0);
                         if (SHOW_LOG) Log.d(TAG, "Listing song of album " + albumId);
                         container = new AudioContainer(albumId, parentId, "",
-                                ctx.getString(R.string.app_name), baseURL, ctx, null, albumId);
+                                context.getString(R.string.app_name), baseURL, context, null, albumId);
                     }
                     else if(subtype.size()==3 && subtype.get(0) == ARTIST_ID)
                     {
@@ -256,7 +256,7 @@ public class ContentDirectoryService extends AbstractContentDirectoryService
                         String parentId = "" + AUDIO_ID + SEPARATOR + subtype.get(0) + SEPARATOR + subtype.get(1);
                         if (SHOW_LOG) Log.d(TAG, "Listing song of album " + albumId + " for artist " + subtype.get(1));
                         container = new AudioContainer(albumId, parentId, "",
-                                ctx.getString(R.string.app_name), baseURL, ctx, null, albumId);
+                                context.getString(R.string.app_name), baseURL, context, null, albumId);
                     }
                 }
                 else if(type==IMAGE_ID)

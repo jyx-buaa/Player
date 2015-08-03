@@ -240,9 +240,13 @@ public class MediaRouterPlayService extends Service {
      * @param trackNumber number of track from playlist to be played
      */
     public void play(int trackNumber) {
-        if (SHOW_LOG) Log.i(TAG, "play");
+        if (SHOW_LOG) Log.i(TAG, "play; trackNumber: "+ trackNumber);
         if (trackNumber < 0 || trackNumber >= this.playlist.size()) return;
-
+        if (SHOW_LOG) {
+            for (int i=0; i<playlist.size(); i++) {
+                Log.v(TAG, playlist.get(i).toString());
+            }
+        }
         this.currentTrack = trackNumber;
         Item track = playlist.get(currentTrack);
         DIDLParser parser = new DIDLParser();

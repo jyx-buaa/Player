@@ -23,12 +23,14 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.provider.MediaStore;
 import android.util.Log;
 
 import com.nined.player.R;
 import com.nined.player.client.PlayerApi;
+import com.nined.player.upnp.RemotePlayService;
 import com.nined.player.utils.PrefUtils;
 
 import org.fourthline.cling.binding.annotations.AnnotationLocalServiceBinder;
@@ -41,16 +43,22 @@ import org.fourthline.cling.model.meta.LocalDevice;
 import org.fourthline.cling.model.meta.LocalService;
 import org.fourthline.cling.model.meta.ManufacturerDetails;
 import org.fourthline.cling.model.meta.ModelDetails;
-import org.fourthline.cling.model.types.DeviceType;
 import org.fourthline.cling.model.types.UDADeviceType;
 import org.fourthline.cling.model.types.UDN;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.UnknownHostException;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import fi.iki.elonen.SimpleWebServer;
@@ -59,37 +67,57 @@ import fi.iki.elonen.SimpleWebServer;
 
 public class MediaServer extends SimpleWebServer
 {
+    /*********************************/
+    /**     Logging Assistant(s)    **/
+    /*********************************/
     private static final String TAG = MediaServer.class.getSimpleName();
     private static final boolean SHOW_LOG = true;
 
-    private UDN udn = null;
-    private LocalDevice localDevice = null;
-    private LocalService localService = null;
-    private Context ctx = null;
-
-    private final static int port = 8192;
+    /*********************************/
+    /**         Constant(s)         **/
+    /*********************************/
     private static InetAddress localAddress;
+    private static final int port = 8192;
+    private static String DEFAULT_SERVER_NAME = "Local Server";
+    /*
+     *
+     */
+    private static final String ERROR_VERSION_NOT_FOUND = "Application name not found in package information.";
+    private static final String ERROR_ID_NOT_FOUND  = "%s was not found in Media Database.";
+
+
+    /*********************************/
+    /**      Member Varaible(s)     **/
+    /*********************************/
+    private Context context;
+    private UDN udn;
+    private LocalDevice device;
+    private LocalService localService;
 
     @SuppressWarnings("unchecked")
-    public MediaServer(InetAddress localAddress, Context ctx) throws ValidationException
+    public MediaServer(final Context context) throws ValidationException
     {
         super(null, port, Collections.EMPTY_LIST, true);
-
         if (SHOW_LOG) Log.i(TAG, "Creating media server !");
 
         localService = new AnnotationLocalServiceBinder()
                 .read(ContentDirectoryService.class);
+        this.context = context;
 
         localService.setManager(new DefaultServiceManager<>(localService, ContentDirectoryService.class));
+        MediaServer.DEFAULT_SERVER_NAME = context.getString(R.string.app_name);
+        this.udn = UDN.valueOf(new UUID(0,10).toString());
 
-        udn = UDN.valueOf(new UUID(0,10).toString());
-        MediaServer.localAddress = localAddress;
-        this.ctx = ctx;
+        try {
+            MediaServer.localAddress = getLocalIpAddress(this.context);
+        } catch (UnknownHostException uhe) {
+            if (SHOW_LOG) Log.d(TAG, "Failed to get the local IP address on this device");
+        }
+
         createLocalDevice();
-
         ContentDirectoryService contentDirectoryService = (ContentDirectoryService)localService.getManager().getImplementation();
-        contentDirectoryService.setContext(ctx);
-        contentDirectoryService.setBaseURL(getAddress());
+        contentDirectoryService.setContext(context);
+        contentDirectoryService.setBaseURL(getLocalAddress());
     }
 
     public void restart()
@@ -108,16 +136,16 @@ public class MediaServer extends SimpleWebServer
     {
         String version = "";
         try {
-            version = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
+            version = this.context.getPackageManager().getPackageInfo(this.context.getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            if (SHOW_LOG) Log.e(TAG, "Application version name not found");
+            if (SHOW_LOG) Log.e(TAG, MediaServer.ERROR_VERSION_NOT_FOUND);
         }
 
         DeviceDetails details = new DeviceDetails(
-                PrefUtils.getString(this.ctx, PlayerApi.CONTENTDIRECTORY_NAME, "9D Server"),
-                new ManufacturerDetails(ctx.getString(R.string.app_name), ctx.getString(R.string.app_url)),
-                new ModelDetails(ctx.getString(R.string.app_name), ctx.getString(R.string.app_url)),
-                ctx.getString(R.string.app_name), version);
+                PrefUtils.getString(this.context, PlayerApi.CONTENTDIRECTORY_NAME, DEFAULT_SERVER_NAME),
+                new ManufacturerDetails(this.context.getString(R.string.app_name), this.context.getString(R.string.app_url)),
+                new ModelDetails(this.context.getString(R.string.app_name), this.context.getString(R.string.app_url)),
+                this.context.getString(R.string.app_name), version);
 
         List<ValidationError> l = details.validate();
         for( ValidationError v : l )
@@ -126,39 +154,45 @@ public class MediaServer extends SimpleWebServer
             if (SHOW_LOG) Log.e(TAG, "Error is " + v.getMessage());
         }
 
-
-        DeviceType type = new UDADeviceType("MediaServer", 1);
-
-        localDevice = new LocalDevice(new DeviceIdentity(udn), type, details, localService);
+        this.device = new LocalDevice(
+                new DeviceIdentity(udn),
+                new UDADeviceType(RemotePlayService.TYPE_MEDIA_SERVER, 1),
+                details,
+                localService);
     }
 
-
+    /*********************************/
+    /**      Getters - Setters      **/
+    /*********************************/
+    /**
+     * @return the local device
+     */
     public LocalDevice getDevice() {
-        return localDevice;
+        return this.device;
     }
-
-    public String getAddress() {
-        return localAddress.getHostAddress() + ":" + port;
-    }
-
+    /**
+     * @param device to set
+     */
     @SuppressWarnings("unused")
-    public class InvalidIdentificatorException extends Exception
-    {
-        public InvalidIdentificatorException(){super();}
-        public InvalidIdentificatorException(String message){super(message);}
+    public void setDevice(LocalDevice device) {
+        this.device = device;
+    }
+    /**
+     * @return the local IP address and port
+     */
+    public String getLocalAddress() {
+        return String.format("%s:%s", localAddress.getHostAddress(), MediaServer.port);
     }
 
-    class ServerObject
-    {
-        ServerObject(String path, String mime)
-        {
-            this.path = path;
-            this.mime = mime;
-        }
-        public String path;
-        public String mime;
-    }
-
+    /*********************************/
+    /**      Create File Server     **/
+    /*********************************/
+    /**
+     *
+     * @param id
+     * @return created file server to access media files
+     * @throws InvalidIdentificatorException
+     */
     private ServerObject getFileServerObject(String id) throws InvalidIdentificatorException
     {
         try
@@ -202,7 +236,7 @@ public class MediaServer extends SimpleWebServer
 
                 String path = null;
                 String mime = null;
-                Cursor cursor = ctx.getContentResolver().query(uri, columns, where, whereVal, null);
+                Cursor cursor = this.context.getContentResolver().query(uri, columns, where, whereVal, null);
 
                 if(cursor.moveToFirst())
                 {
@@ -221,25 +255,40 @@ public class MediaServer extends SimpleWebServer
             if (SHOW_LOG) Log.e(TAG, "exception", e);
         }
 
-        throw new InvalidIdentificatorException(id + " was not found in media database");
+        throw new InvalidIdentificatorException(String.format(MediaServer.ERROR_ID_NOT_FOUND, id));
     }
 
+    /*********************************/
+    /**        NanoHTTPD Serve      **/
+    /*********************************/
+    /**
+     * To serve
+     * @param uri
+     * @param method
+     * @param header
+     * @param params
+     * @param files
+     * @return
+     */
     @Override
-    public Response serve(String uri, Method method, Map<String, String> header, Map<String, String> parms,
+    public Response serve(String uri, Method method, Map<String, String> header, Map<String, String> params,
                           Map<String, String> files)
     {
-        Response res;
-
+        Response response;
+        String range = null;
         if (SHOW_LOG) Log.i(TAG, "Serve uri : " + uri);
 
-        for(Map.Entry<String, String> entry : header.entrySet())
-            if (SHOW_LOG) Log.d(TAG, "Header : key=" + entry.getKey() + " value=" + entry.getValue());
+        for(Entry<String, String> entry : header.entrySet()) {
+            if (SHOW_LOG) Log.d(TAG, String.format("Header : key=%s , value=%s", entry.getKey(), entry.getValue()));
+            if ("range".equals(entry.getKey())) {
+                range = entry.getValue();
+            }
+        }
+        for(Entry<String, String> entry : params.entrySet())
+            if (SHOW_LOG) Log.d(TAG, String.format("Params : key=%s, value=%s", entry.getKey(), entry.getValue()));
 
-        for(Map.Entry<String, String> entry : parms.entrySet())
-            if (SHOW_LOG) Log.d(TAG, "Params : key=" + entry.getKey() + " value=" + entry.getValue());
-
-        for(Map.Entry<String, String> entry : files.entrySet())
-            if (SHOW_LOG) Log.d(TAG, "Files : key=" + entry.getKey() + " value=" + entry.getValue());
+        for(Entry<String, String> entry : files.entrySet())
+            if (SHOW_LOG) Log.d(TAG, String.format("Files : key=%s, value=%s", entry.getKey(), entry.getValue()));
 
         try
         {
@@ -247,36 +296,36 @@ public class MediaServer extends SimpleWebServer
             {
                 ServerObject obj = getFileServerObject(uri);
                 if (SHOW_LOG) Log.i(TAG, "Will serve " + obj.path);
-                FileInputStream fis = new FileInputStream(uri);
-                if (SHOW_LOG) Log.i(TAG, "File Stream: " + fis.getFD());
-                res = new Response(Response.Status.OK, obj.mime, fis);
-                //return new Response(Response.Status.OK, obj.mime, fis);
-            }
-            catch(InvalidIdentificatorException e)
-            {
+                if (range==null) {
+                    response = getFullResponse(obj.mime, obj.path);
+                } else {
+                    response = getPartialResponse(obj.mime, obj.path, range);
+                }
+            } catch(InvalidIdentificatorException e) {
                 return new Response(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "Error 404, file not found.");
-            }
-            catch (FileNotFoundException fe) {
+            } catch(FileNotFoundException fe) {
                 if (SHOW_LOG) Log.e(TAG, "File not found");
                 return new Response(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "Error 404, file not found.");
             }
 
-            if( res != null )
+            if( response != null )
             {
                 String version = "1.0";
                 try {
-                    version = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
+                    version = this.context.getPackageManager().getPackageInfo(this.context.getPackageName(), 0).versionName;
                 } catch (PackageManager.NameNotFoundException e) {
-                    if (SHOW_LOG) Log.e(TAG, "Application version name not found");
+                    if (SHOW_LOG) Log.e(TAG, MediaServer.ERROR_VERSION_NOT_FOUND);
                 }
 
-                // Some DLNA header option
-                res.addHeader("realTimeInfo.dlna.org", "DLNA.ORG_TLAG=*");
-                res.addHeader("contentFeatures.dlna.org", "");
-                res.addHeader("transferMode.dlna.org", "Streaming");
-                res.addHeader("Server", "DLNADOC/1.50 UPnP/1.0 Cling/2.0 DroidUPnP/"+version +" Android/" + Build.VERSION.RELEASE);
+                /**
+                 * Some DLNA header options
+                 */
+                response.addHeader("realTimeInfo.dlna.org", "DLNA.ORG_TLAG=*");
+                response.addHeader("contentFeatures.dlna.org", "");
+                response.addHeader("transferMode.dlna.org", "Streaming");
+                //response.addHeader("Server", "DLNADOC/1.50 UPnP/1.0 Cling/3.0 SRS Media Stream/"+version +" Android/" + Build.VERSION.RELEASE);
             }
-            return res;
+            return response;
         }
         catch(Exception e)
         {
@@ -285,5 +334,120 @@ public class MediaServer extends SimpleWebServer
         }
 
         return new Response(Response.Status.INTERNAL_ERROR, MIME_PLAINTEXT, "INTERNAL ERROR: unexpected error.");
+    }
+
+    private Response getFullResponse(String mimeType, String filePath) throws FileNotFoundException {
+        if (SHOW_LOG) Log.d(TAG, "Streaming full file into response");
+        cleanUpStreams();
+        FileInputStream fileInputStream = new FileInputStream(filePath);
+        Response response = new Response(Response.Status.OK, mimeType, fileInputStream);
+        response.addHeader("Content-Type", mimeType);
+        return response;
+    }
+
+    private Response getPartialResponse(String mimeType, String filePath, String rangeHeader) throws IOException {
+        if (SHOW_LOG) Log.d(TAG, "Streaming file partially into response");
+        File file = new File(filePath);
+        String rangeValue = rangeHeader.trim().substring("bytes=".length());
+        long fileLength = file.length();
+        long start, end;
+        if (rangeValue.startsWith("-")) {
+            end = fileLength - 1;
+            start = fileLength - 1
+                    - Long.parseLong(rangeValue.substring("-".length()));
+        } else {
+            String [] range = rangeValue.split("-");
+            start = Long.parseLong(range[0]);
+            end = (range.length > 1)? Long.parseLong(range[1])
+                    : fileLength - 1;
+        }
+        if (start <= end) {
+            long contentLength = end - start + 1;
+            cleanUpStreams();
+            FileInputStream fileInputStream = new FileInputStream(file);
+            fileInputStream.skip(start);
+            Response response = new Response(Response.Status.PARTIAL_CONTENT, mimeType, fileInputStream);
+            response.addHeader("Content-Length", contentLength+"");
+            response.addHeader("Content-Range", String.format("bytes%d-%d/%d", start, end, fileLength));
+            response.addHeader("Content-Type", mimeType);
+            return response;
+        } else {
+            return new Response(Response.Status.RANGE_NOT_SATISFIABLE, MIME_PLAINTEXT, rangeHeader);
+        }
+    }
+    private void cleanUpStreams() {
+
+    }
+    /*********************************/
+    /**       Private Class(s)      **/
+    /*********************************/
+    class ServerObject
+    {
+        ServerObject(String path, String mime)
+        {
+            this.path = path;
+            this.mime = mime;
+        }
+        public String path;
+        public String mime;
+    }
+    @SuppressWarnings("unused")
+    public class InvalidIdentificatorException extends Exception
+    {
+        public InvalidIdentificatorException(){super();}
+        public InvalidIdentificatorException(String message){super(message);}
+    }
+
+    /*********************************/
+    /**     Get Local IP Address    **/
+    /*********************************/
+    private static InetAddress getLocalIpAddress(Context context) throws UnknownHostException
+    {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        int ipAddress = wifiInfo.getIpAddress();
+        if(ipAddress!=0)
+            return InetAddress.getByName(String.format("%d.%d.%d.%d",
+                    (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
+                    (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff)));
+
+        Log.d(TAG, "No ip adress available throught wifi manager, try to get it manually");
+
+        InetAddress inetAddress;
+
+        inetAddress = getLocalIpAdressFromIntf("wlan0");
+        if(inetAddress!=null)
+        {
+            Log.d(TAG, "Got an ip for interfarce wlan0");
+            return inetAddress;
+        }
+
+        inetAddress = getLocalIpAdressFromIntf("usb0");
+        if(inetAddress!=null)
+        {
+            Log.d(TAG, "Got an ip for interfarce usb0");
+            return inetAddress;
+        }
+
+        return InetAddress.getByName("0.0.0.0");
+    }
+    private static InetAddress getLocalIpAdressFromIntf(String intfName)
+    {
+        try
+        {
+            NetworkInterface intf = NetworkInterface.getByName(intfName);
+            if(intf.isUp())
+            {
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();)
+                {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address)
+                        return inetAddress;
+                }
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Unable to get ip adress for interface " + intfName);
+        }
+        return null;
     }
 }

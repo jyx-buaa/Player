@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
 import android.support.v7.media.MediaItemStatus;
 import android.support.v7.media.MediaItemStatus.Builder;
 import android.util.Log;
@@ -72,6 +73,7 @@ public class RemotePlayServiceBinder extends IRemotePlayService.Stub {
 
     @Override
     public void selectRenderer(String id) throws RemoteException {
+        if (SHOW_LOG) Log.d(TAG, "Selecting renderer: " + id);
         this.currentRenderer = this.remotePlayService.devices.get(id);
         for (RemotePlayServiceBinder binder : remotePlayService.binders.keySet()) {
             if (binder != this
@@ -140,6 +142,7 @@ public class RemotePlayServiceBinder extends IRemotePlayService.Stub {
      */
     @Override
     public void unselectRenderer(String sessionId) throws RemoteException {
+        if (SHOW_LOG) Log.d(TAG, "Unselecting renderer: " + sessionId);
         if (this.remotePlayService.devices.get(sessionId) != null) {
             stop(sessionId);
         }
@@ -156,6 +159,7 @@ public class RemotePlayServiceBinder extends IRemotePlayService.Stub {
      */
     @Override
     public void setVolume(int volume) throws RemoteException {
+        if (SHOW_LOG) Log.d(TAG, "Setting volume to " + volume);
         this.remotePlayService.upnpService.getControlPoint().execute(
                 new SetVolume(this.remotePlayService.getService(this.currentRenderer, RemotePlayService.SERVICE_RENDERING), volume)
                 {
@@ -176,7 +180,11 @@ public class RemotePlayServiceBinder extends IRemotePlayService.Stub {
      * @throws RemoteException
      */
     @Override
-    public void play(final String uri,final String metadata) throws RemoteException {
+    public void play(@NonNull final String uri,final String metadata) throws RemoteException {
+        if (SHOW_LOG) {
+            Log.d(TAG, "Playing media file from URI: " + uri);
+            if (metadata!=null) Log.d(TAG, "Attached Metadata: " + metadata);
+        }
         this.startingPlayback = true;
         this.playbackState = MediaItemStatus.PLAYBACK_STATE_BUFFERING;
         this.remotePlayService.upnpService.getControlPoint().execute(

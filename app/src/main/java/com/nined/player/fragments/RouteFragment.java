@@ -72,7 +72,7 @@ public class RouteFragment extends MediaRouteDiscoveryFragment implements
     /**     Logging Assistant(s)    **/
     /*********************************/
     private static final String TAG = RouteFragment.class.getSimpleName();
-    private static final boolean SHOW_LOG = true;
+    private static final boolean SHOW_LOG = false;
 
     /*********************************/
     /**         Constant(s)         **/

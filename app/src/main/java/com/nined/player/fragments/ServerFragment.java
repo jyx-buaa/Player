@@ -20,13 +20,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.nhaarman.listviewanimations.ArrayAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.util.Insertable;
 import com.nined.player.MainActivity;
 import com.nined.player.R;
-import com.nined.player.mediaserver.MediaServer;
 import com.nined.player.upnp.RemotePlayService;
 import com.nined.player.views.FileArrayAdapter;
 import com.nined.player.views.RemoteImageView;
@@ -52,7 +53,6 @@ import org.fourthline.cling.support.model.item.Item;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
 
@@ -66,7 +66,7 @@ public class ServerFragment extends ListFragment
     /**     Logging Assistant(s)    **/
     /*********************************/
     private static final String TAG = ServerFragment.class.getSimpleName();
-    private static final boolean SHOW_LOG = true;
+    private static final boolean SHOW_LOG = false;
 
     /*********************************/
     /**         Constant(s)         **/
@@ -74,8 +74,6 @@ public class ServerFragment extends ListFragment
     private static final String CURRENT_SERVER = "current_server";
     private static final String SAVED_PATHS = "current_paths";
     private static final String LIST_STATE = "list_state";
-
-    protected static final String SERVER = "MediaServer";
     private static final String ROOT_DIRECTORY = "0";
     @LayoutRes
     private static final int LAYOUT = R.layout.fragment_server;
@@ -107,15 +105,16 @@ public class ServerFragment extends ListFragment
      * Currently browsing server
      */
     private Device<?,?,?> currentServer;
-    private MediaServer localServer;
     /**
      * List Adapter when browsing devices
      */
     private DeviceArrayAdapter deviceAdapter;
+    private AlphaInAnimationAdapter deviceAnimationAdapter;
     /**
      * List Adapter when browsing files
      */
     private FileArrayAdapter fileAdapter;
+    private AlphaInAnimationAdapter fileAnimationAdapter;
     /**
      * UPnP device service
      */
@@ -135,13 +134,15 @@ public class ServerFragment extends ListFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         this.fileAdapter = new FileArrayAdapter(getActivity());
-        this.deviceAdapter = new DeviceArrayAdapter(getActivity().getApplicationContext(), ServerFragment.SERVER);
-        this.setListAdapter(deviceAdapter);
+        this.fileAnimationAdapter = new AlphaInAnimationAdapter(fileAdapter);
+        this.fileAnimationAdapter.setAbsListView(getListView());
+        this.deviceAdapter = new DeviceArrayAdapter(getActivity().getApplicationContext(), RemotePlayService.TYPE_MEDIA_SERVER);
+        this.deviceAnimationAdapter = new AlphaInAnimationAdapter(deviceAdapter);
+        this.deviceAnimationAdapter.setAbsListView(getListView());
+        this.setListAdapter(deviceAnimationAdapter);
 
         // launch and bind UPnPService
         if (SHOW_LOG) Log.d(TAG, "Attempt to bind service to AndroidUpnpServiceImpl");
-        //todo getActivity().getApplicationContext().startService(
-        //TODO        new Intent(getActivity(), AndroidUpnpServiceImpl.class));
         getActivity().getApplicationContext().bindService(
                 new Intent(getActivity(), AndroidUpnpServiceImpl.class),
                 upnpServiceConnection, Context.BIND_AUTO_CREATE
@@ -173,10 +174,10 @@ public class ServerFragment extends ListFragment
         super.onSaveInstanceState(outState);
         outState.putString(ServerFragment.CURRENT_SERVER, (this.currentServer != null) ?
                 this.currentServer.getIdentity().getUdn().toString() : "");
-        outState.putStringArrayList(ServerFragment.SAVED_PATHS, new ArrayList<String>(this.currentPath));
+        outState.putStringArrayList(ServerFragment.SAVED_PATHS, new ArrayList<>(this.currentPath));
         this.listState.pop();
         this.listState.push(getListView().onSaveInstanceState());
-        outState.putParcelableArrayList(ServerFragment.LIST_STATE, new ArrayList<Parcelable>(this.listState));
+        outState.putParcelableArrayList(ServerFragment.LIST_STATE, new ArrayList<>(this.listState));
     }
     @Override
     public void onDestroy() {
@@ -189,19 +190,23 @@ public class ServerFragment extends ListFragment
     /*********************************/
     @Override
     public void onListItemClick(ListView list, View view, int position, long id) {
-        if (getListAdapter() == this.deviceAdapter) {
+        if (getListAdapter() == this.deviceAnimationAdapter) {
+            this.deviceAnimationAdapter.notifyDataSetChanged();
             browsingMode(this.deviceAdapter.getItem(position));
-        } else if (getListAdapter() == this.fileAdapter) {
+        } else if (getListAdapter() == this.fileAnimationAdapter) {
             if (this.fileAdapter.getItem(position) instanceof Container)
-                getFiles(((Container) this.fileAdapter.getItem(position)).getId());
+                getFiles((this.fileAdapter.getItem(position)).getId());
             else {
-                List<Item> playlist = new ArrayList<Item>();
+                //TODO
+                List<Item> playlist = new ArrayList<>();
                 for (int i=0; i< this.fileAdapter.getCount(); i++) {
                     if (this.fileAdapter.getItem(i) instanceof Item) {
                         playlist.add((Item) this.fileAdapter.getItem(i));
                     }
                 }
-                getMainActivity().play(playlist, position);
+                // Play
+                MainActivity main = getMainActivity();
+                if (main!=null) main.play(playlist, position);
             }
         }
     }
@@ -286,7 +291,7 @@ public class ServerFragment extends ListFragment
      * Displays available servers in the ListView
      */
     private void serverMode() {
-        setListAdapter(this.deviceAdapter);
+        setListAdapter(this.deviceAnimationAdapter);
         this.currentServer = null;
         this.empty.setText(R.string.device_list_empty);
         getListView().onRestoreInstanceState(this.listState.pop());
@@ -295,7 +300,7 @@ public class ServerFragment extends ListFragment
      * Displays available files in the current media server
      */
     private void browsingMode(Device<?, ?, ?> server) {
-        setListAdapter(this.fileAdapter);
+        setListAdapter(this.fileAnimationAdapter);
         this.currentServer = server;
         getFiles(ROOT_DIRECTORY);
         this.empty.setText(R.string.folder_list_empty);
@@ -309,6 +314,7 @@ public class ServerFragment extends ListFragment
      * Displays the current directory on the ListView
      */
     private void getFiles(final boolean restoreListState) {
+        if (SHOW_LOG) Log.d(TAG, "getFiles");
         if (this.currentServer==null) return;
 
         Service<?,?> service = this.currentServer.findService(
@@ -352,7 +358,7 @@ public class ServerFragment extends ListFragment
     /**     w/ Registry Listener    **/
     /*********************************/
     private class DeviceArrayAdapter extends ArrayAdapter<Device<?, ?, ?>>
-            implements RegistryListener {
+            implements RegistryListener, Insertable<Device<?,?,?>> {
         /*********************************/
         /**       Member Variable(s)    **/
         /*********************************/
@@ -362,10 +368,14 @@ public class ServerFragment extends ListFragment
         /**      Default Constructor    **/
         /*********************************/
         public DeviceArrayAdapter(@NonNull Context context, @NonNull String deviceType) {
-            super(context, R.layout.listitem_route);
+            super();
             this.context = context;
             this.deviceType = deviceType;
         }
+
+        /*********************************/
+        /**   ArrayAdapter Override(s)  **/
+        /*********************************/
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
@@ -393,6 +403,7 @@ public class ServerFragment extends ListFragment
             }
             return convertView;
         }
+
         /*********************************/
         /**     Registry Listener(s)    **/
         /*********************************/
@@ -412,7 +423,8 @@ public class ServerFragment extends ListFragment
                 public void run() {
                     if (device.getType().getType().equals(DeviceArrayAdapter.this.deviceType)) {
                         add(device);
-                        sort(new Comparator<Device<?, ?, ?>>() {
+                        //TODO
+                        /*sort(new Comparator<Device<?, ?, ?>>() {
 
                             @Override
                             public int compare(Device<?, ?, ?> lhs,
@@ -420,11 +432,10 @@ public class ServerFragment extends ListFragment
                                 return lhs.getDetails().getFriendlyName()
                                         .compareTo(rhs.getDetails().getFriendlyName());
                             }
-                        });
+                        });*/
                     }
                 }
             });
-            //notifyDataSetChanged();
         }
         /**
          * Removes the device from the list (if it is an element).
@@ -435,12 +446,11 @@ public class ServerFragment extends ListFragment
             ServerFragment.this.getMainActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (getPosition(device) != -1) {
+                    if (contains(device)) {
                         remove(device);
                     }
                 }
             });
-            //notifyDataSetChanged();
         }
         @Override
         public void remoteDeviceDiscoveryFailed(Registry registry, RemoteDevice device, Exception ex) {
@@ -481,7 +491,7 @@ public class ServerFragment extends ListFragment
     /*********************************/
     @Override
     public boolean onBackPressed() {
-        if (getListAdapter() == this.deviceAdapter) return false;
+        if (getListAdapter() == this.deviceAnimationAdapter) return false;
         this.currentPath.pop();
         if (currentPath.isEmpty()) serverMode();
         else {
